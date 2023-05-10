@@ -13,11 +13,11 @@ raw_time_landing = 838
 t_max = raw_time_landing - raw_time_takeoff
 
 data_sources = {
-    "airspeed" : ("./flight3_airspeed_validated_0.csv", "calibrated_airspeed_m_s"),
-    "barometer": ("./flight3_sensor_baro_0.csv", "pressure"),
-    "baro_alt" : ("./flight3_vehicle_air_data_0.csv", "baro_alt_meter"),
-    "voltage"  : ("./flight3_battery_status_1.csv", "voltage_filtered_v"),
-    "current"  : ("./flight3_battery_status_1.csv", "current_filtered_a"),
+    "airspeed" : ("./data/flight3_airspeed_validated_0.csv", "calibrated_airspeed_m_s"),
+    "barometer": ("./data/flight3_sensor_baro_0.csv", "pressure"),
+    "baro_alt" : ("./data/flight3_vehicle_air_data_0.csv", "baro_alt_meter"),
+    "voltage"  : ("./data/flight3_battery_status_1.csv", "voltage_filtered_v"),
+    "current"  : ("./data/flight3_battery_status_1.csv", "current_filtered_a"),
 }
 
 
