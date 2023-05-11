@@ -13,11 +13,11 @@ raw_time_landing = 838
 t_max = raw_time_landing - raw_time_takeoff
 
 data_sources = {
-    "airspeed" : ("./data/flight3_airspeed_validated_0.csv", "calibrated_airspeed_m_s"),
-    "barometer": ("./data/flight3_sensor_baro_0.csv", "pressure"),
-    "baro_alt" : ("./data/flight3_vehicle_air_data_0.csv", "baro_alt_meter"),
-    "voltage"  : ("./data/flight3_battery_status_1.csv", "voltage_filtered_v"),
-    "current"  : ("./data/flight3_battery_status_1.csv", "current_filtered_a"),
+    "airspeed" : ("../data/flight3_airspeed_validated_0.csv", "calibrated_airspeed_m_s"),
+    "barometer": ("../data/flight3_sensor_baro_0.csv", "pressure"),
+    "baro_alt" : ("../data/flight3_vehicle_air_data_0.csv", "baro_alt_meter"),
+    "voltage"  : ("../data/flight3_battery_status_1.csv", "voltage_v"),
+    "current"  : ("../data/flight3_battery_status_1.csv", "current_a"),
 }
 
 
@@ -264,15 +264,15 @@ p.hline(
     zorder=3.5,
 )
 
-# plt.annotate(
-#     text="Watermark: Plot made by Peter",
-#     xy=(0.02, 0.98),
-#     xycoords="axes fraction",
-#     ha="left",
-#     va="top",
-#     fontsize=18,
-#     alpha=0.2,
-# )
+plt.annotate(
+    text="Watermark: Plot made by Peter",
+    xy=(0.02, 0.98),
+    xycoords="axes fraction",
+    ha="left",
+    va="top",
+    fontsize=18,
+    alpha=0.4,
+)
 
 plt.xlim(6, 20)
 plt.ylim(0, 500)
