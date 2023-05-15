@@ -17,6 +17,7 @@ data_sources = {
     "airspeed" : ("./data/flight3_airspeed_validated_0.csv", "calibrated_airspeed_m_s"),
     "barometer": ("./data/flight3_sensor_baro_0.csv", "pressure"),
     "baro_alt" : ("./data/flight3_vehicle_air_data_0.csv", "baro_alt_meter"),
+    "gps_alt_mm"  : ("./data/flight3_vehicle_gps_position_0.csv", "alt"),
     "voltage"  : ("./data/flight3_battery_status_1.csv", "voltage_v"),
     "current"  : ("./data/flight3_battery_status_1.csv", "current_a"),
 }
@@ -44,6 +45,7 @@ def read(name):
     interpolator = interpolate.UnivariateSpline(
         x=time,
         y=data,
+        k=5,
         w=w,
         s=len(w),
         check_finite=True,
@@ -54,24 +56,25 @@ def read(name):
 
 airspeed = read("airspeed")[0]
 baro_alt = read("baro_alt")[0]
+gps_alt_mm = read("gps_alt_mm")[0]
 voltage = read("voltage")[0]
 current = read("current")[0]
 
-t = np.linspace(10, t_max, 5000)
+t = np.linspace(10, t_max - 10, 5000)
 dt = np.diff(t)[0]
 
 
 def f(x):
     # return x
-    return ndimage.gaussian_filter(x, sigma=8 / dt)
-    # return ndimage.uniform_filter(x, size=int(5 / dt))
+    return ndimage.gaussian_filter(x, sigma=5 / dt)
+    # return ndimage.uniform_filter(x, size=int(15 / dt))
 
 
 opti = asb.Opti()
 
 mass_total = 9.5
 
-avionics_power = opti.variable(init_guess=4, lower_bound=0, upper_bound=20)
+avionics_power = 5 #opti.variable(init_guess=4, lower_bound=0, upper_bound=20)
 
 mean_current = np.mean(f(current(t)))
 mean_airspeed = np.mean(f(airspeed(t)))
@@ -84,25 +87,45 @@ propto_rpm = np.softmax(
 
 propto_J = (f(airspeed(t)) / mean_airspeed) / propto_rpm
 
+### Model 0
 prop_eff_params = {
-    "Jc" : opti.variable(init_guess=1),
-    "Js" : opti.variable(init_guess=0.5, log_transform=True, lower_bound=0.1, upper_bound=1000),
-    "max": opti.variable(init_guess=1, lower_bound=0, upper_bound=1),
-    "min": opti.variable(init_guess=0.2, lower_bound=0, upper_bound=1),
+    "eff" : opti.variable(init_guess=0.8, lower_bound=0, upper_bound=1),
 }
 
-prop_efficiency = np.blend(
-    (
-            (propto_J - prop_eff_params["Jc"]) / prop_eff_params["Js"]
-    ),
-    prop_eff_params["max"],
-    prop_eff_params["min"]
-)
+prop_efficiency = prop_eff_params["eff"]
 
-opti.subject_to([
-    prop_eff_params["Jc"] >= propto_J.min(),
-    prop_eff_params["Jc"] <= propto_J.max(),
-])
+### Model 1
+# prop_eff_params = {
+#     "Jc" : opti.variable(init_guess=propto_J.mean()),
+#     "Js" : opti.variable(init_guess=propto_J.std(), log_transform=True, lower_bound=0.001, upper_bound=1000),
+#     "max": opti.variable(init_guess=0.5, lower_bound=0, upper_bound=1),
+#     "min": opti.variable(init_guess=0.5, lower_bound=0, upper_bound=1),
+# }
+#
+# prop_efficiency = np.blend(
+#     (
+#             (propto_J - prop_eff_params["Jc"]) / prop_eff_params["Js"]
+#     ),
+#     prop_eff_params["max"],
+#     prop_eff_params["min"]
+# )
+
+### Model 2
+# prop_eff_params = {
+#     "scale"        : opti.variable(init_guess=1, lower_bound=0, upper_bound=1),
+#     "J_pitch_speed": opti.variable(init_guess=2, lower_bound=0),
+#     "sharpness"    : opti.variable(init_guess=10, lower_bound=2, upper_bound=50),
+# }
+#
+# prop_efficiency = np.softmax(
+#     prop_eff_params["scale"] * (
+#             (propto_J / prop_eff_params["J_pitch_speed"]) -
+#             (propto_J / prop_eff_params["J_pitch_speed"]) ** prop_eff_params["sharpness"]
+#     ),
+#         -1,
+#     softness=0.1
+# )
+
 
 propulsion_air_power = prop_efficiency * (f(voltage(t)) * f(current(t)) - avionics_power)
 
@@ -136,12 +159,12 @@ residuals = (
 
 ##### Objective
 
-# ### L2-norm
+### L2-norm
 opti.minimize(
     np.mean(residuals ** 2)
 )
 
-### L1-norm
+# ### L1-norm
 # abs_residual = opti.variable(init_guess=0, n_vars=np.length(residuals))
 # opti.subject_to([
 #     abs_residual >= residuals,
@@ -156,7 +179,7 @@ sol = opti.solve(
 )
 
 ##### Post-Process, Print
-print("\nMean Absolute Error:", sol.value(np.mean(abs_residual)), "W")
+print("\nMean Absolute Error:", np.mean(np.abs(sol(residuals))), "W")
 
 l = copy.copy(locals())
 for k, v in l.items():
@@ -197,13 +220,24 @@ def steady_state_CD(CL):
 
 
 def steady_state_prop_efficiency(propto_J):
-    return np.blend(
-        (
-                (propto_J - prop_eff_params["Jc"]) / prop_eff_params["Js"]
-        ),
-        prop_eff_params["max"],
-        prop_eff_params["min"]
-    )
+    return prop_eff_params["eff"] * np.ones_like(propto_J)
+
+    # return np.blend(
+    #     (
+    #             (propto_J - prop_eff_params["Jc"]) / prop_eff_params["Js"]
+    #     ),
+    #     prop_eff_params["max"],
+    #     prop_eff_params["min"]
+    # )
+
+    # return np.softmax(
+    #     prop_eff_params["scale"] * (
+    #             (propto_J / prop_eff_params["J_pitch_speed"]) -
+    #             (propto_J / prop_eff_params["J_pitch_speed"]) ** prop_eff_params["sharpness"]
+    #     ),
+    #     -1,
+    #     softness=0.1
+    # )
 
 
 def steady_state_required_electrical_power(airspeed):
@@ -229,15 +263,10 @@ def steady_state_required_electrical_power(airspeed):
     opti2.subject_to(
         propto_J == required_propto_J
     )
-    # J_residuals = propto_J - required_propto_J
-    # opti2.minimize(np.mean(J_residuals ** 2))
 
     sol2 = opti2.solve(
         verbose=False
     )
-
-    # if np.any(np.abs(sol2(J_residuals))) > 1e-4:
-    #     raise ValueError("Failed to find steady-state solution")
 
     return sol2(
         drag_power / prop_efficiency + avionics_power
@@ -249,7 +278,8 @@ fig, ax = plt.subplots()
 
 
 def jitter(data):
-    return data + np.random.uniform(-1, 1, len(data)) * np.std(data) * 0.05
+    iqr = np.percentile(data, 75) - np.percentile(data, 25)
+    return data + np.random.uniform(-1, 1, len(data)) * iqr * 0.04
 
 
 ##### Plot data
@@ -408,13 +438,15 @@ p.show_plot(
 fig, ax = plt.subplots()
 
 ##### Plot data
+mask = f(current(t)) > 1
+
 prop_efficiency_plot = (
-                               propulsion_air_power + residuals
+                               propulsion_air_power - residuals
                        ) / (f(voltage(t)) * f(current(t)) - avionics_power)
 
 plt.plot(
-    jitter(propto_J),
-    jitter(prop_efficiency_plot),
+    jitter(propto_J[mask]),
+    jitter(prop_efficiency_plot[mask]),
     ".",
     color="k",
     alpha=(1 - (1 - 0.5) ** (1 / (len(t) / 500))),
@@ -430,7 +462,7 @@ plt.plot(
 
 ##### Plot fit
 propto_J_plot = np.linspace(
-    0, propto_J.max(), 1000
+    0, propto_J[mask].max(), 1000
 )
 
 prop_efficiency_plot = steady_state_prop_efficiency(propto_J_plot)
@@ -445,7 +477,7 @@ _line, = plt.plot(
     label="Model Fit (physics-informed; $L_1$ norm)",
 )
 
-plt.xlim(0, 1.1 * propto_J.max())
+plt.xlim(0, propto_J[mask].max())
 plt.ylim(bottom=0)
 #
 p.set_ticks(0.5, 0.1, 0.2, 0.05)
