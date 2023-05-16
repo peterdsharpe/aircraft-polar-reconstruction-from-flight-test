@@ -8,8 +8,8 @@ import copy
 
 timestamp_0 = 539330432
 
-raw_time_takeoff = 576
-raw_time_landing = 838
+raw_time_takeoff = 577  # Note: data from first 10 seconds is dirty
+raw_time_landing = 840  # Note: data from last 10 seconds is dirty
 
 t_max = raw_time_landing - raw_time_takeoff
 
