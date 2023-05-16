@@ -14,12 +14,12 @@ raw_time_landing = 838
 t_max = raw_time_landing - raw_time_takeoff
 
 data_sources = {
-    "airspeed" : ("./data/flight3_airspeed_validated_0.csv", "calibrated_airspeed_m_s"),
-    "barometer": ("./data/flight3_sensor_baro_0.csv", "pressure"),
-    "baro_alt" : ("./data/flight3_vehicle_air_data_0.csv", "baro_alt_meter"),
-    "gps_alt_mm"  : ("./data/flight3_vehicle_gps_position_0.csv", "alt"),
-    "voltage"  : ("./data/flight3_battery_status_1.csv", "voltage_v"),
-    "current"  : ("./data/flight3_battery_status_1.csv", "current_a"),
+    "airspeed"  : ("./data/flight3_airspeed_validated_0.csv", "calibrated_airspeed_m_s"),
+    "barometer" : ("./data/flight3_sensor_baro_0.csv", "pressure"),
+    "baro_alt"  : ("./data/flight3_vehicle_air_data_0.csv", "baro_alt_meter"),
+    "gps_alt_mm": ("./data/flight3_vehicle_gps_position_0.csv", "alt"),
+    "voltage"   : ("./data/flight3_battery_status_1.csv", "voltage_v"),
+    "current"   : ("./data/flight3_battery_status_1.csv", "current_a"),
 }
 
 
@@ -74,7 +74,7 @@ opti = asb.Opti()
 
 mass_total = 9.5
 
-avionics_power = 5 #opti.variable(init_guess=4, lower_bound=0, upper_bound=20)
+avionics_power = 5  # opti.variable(init_guess=4, lower_bound=0, upper_bound=20)
 
 mean_current = np.mean(f(current(t)))
 mean_airspeed = np.mean(f(airspeed(t)))
