@@ -67,7 +67,7 @@ dt = np.diff(t)[0]
 
 def f(x):
     # return x
-    return ndimage.gaussian_filter(x, sigma=5 / dt)
+    return ndimage.gaussian_filter(x, sigma=7 / dt)
     # return ndimage.uniform_filter(x, size=int(15 / dt))
 
 
@@ -90,7 +90,7 @@ propto_J = (f(airspeed(t)) / mean_airspeed) / propto_rpm
 
 ### Model 0
 prop_eff_params = {
-    "eff" : opti.variable(init_guess=0.8, lower_bound=0, upper_bound=1),
+    "eff": opti.variable(init_guess=0.8, lower_bound=0, upper_bound=1),
 }
 
 prop_efficiency = prop_eff_params["eff"]
