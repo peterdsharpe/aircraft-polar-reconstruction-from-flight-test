@@ -49,6 +49,7 @@ def read(name):
         w=w,
         s=len(w),
         check_finite=True,
+        ext='raise',
     )
 
     return interpolator, time, data
