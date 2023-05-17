@@ -101,27 +101,27 @@ propto_rpm = np.softmax(
 propto_J = (f(airspeed(t)) / mean_airspeed) / propto_rpm
 
 ### Model 0
-prop_eff_params = {
-    "eff": opti.variable(init_guess=0.8, lower_bound=0, upper_bound=1),
-}
-
-prop_efficiency = prop_eff_params["eff"]
-
-### Model 1
 # prop_eff_params = {
-#     "Jc" : opti.variable(init_guess=propto_J.mean()),
-#     "Js" : opti.variable(init_guess=propto_J.std(), log_transform=True, lower_bound=0.001, upper_bound=1000),
-#     "max": opti.variable(init_guess=0.5, lower_bound=0, upper_bound=1),
-#     "min": opti.variable(init_guess=0.5, lower_bound=0, upper_bound=1),
+#     "eff": opti.variable(init_guess=0.8, lower_bound=0, upper_bound=1),
 # }
 #
-# prop_efficiency = np.blend(
-#     (
-#             (propto_J - prop_eff_params["Jc"]) / prop_eff_params["Js"]
-#     ),
-#     prop_eff_params["max"],
-#     prop_eff_params["min"]
-# )
+# prop_efficiency = prop_eff_params["eff"]
+
+### Model 1
+prop_eff_params = {
+    "Jc" : opti.variable(init_guess=propto_J.mean()),
+    "Js" : opti.variable(init_guess=propto_J.std(), log_transform=True, lower_bound=0.1, upper_bound=1000),
+    "max": opti.variable(init_guess=0.8, lower_bound=0, upper_bound=1),
+    "min": opti.variable(init_guess=0.5, lower_bound=0, upper_bound=1),
+}
+
+prop_efficiency = np.blend(
+    (
+            (propto_J - prop_eff_params["Jc"]) / prop_eff_params["Js"]
+    ),
+    prop_eff_params["max"],
+    prop_eff_params["min"]
+)
 
 ### Model 2
 # prop_eff_params = {
@@ -233,15 +233,15 @@ def steady_state_CD(CL):
 
 
 def steady_state_prop_efficiency(propto_J):
-    return prop_eff_params["eff"] * np.ones_like(propto_J)
+    # return prop_eff_params["eff"] * np.ones_like(propto_J)
 
-    # return np.blend(
-    #     (
-    #             (propto_J - prop_eff_params["Jc"]) / prop_eff_params["Js"]
-    #     ),
-    #     prop_eff_params["max"],
-    #     prop_eff_params["min"]
-    # )
+    return np.blend(
+        (
+                (propto_J - prop_eff_params["Jc"]) / prop_eff_params["Js"]
+        ),
+        prop_eff_params["max"],
+        prop_eff_params["min"]
+    )
 
     # return np.softmax(
     #     prop_eff_params["scale"] * (
