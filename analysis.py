@@ -79,7 +79,7 @@ dt = np.diff(t)[0]
 
 def f(x):
     # return x
-    return ndimage.gaussian_filter(x, sigma=7 / dt)
+    return ndimage.gaussian_filter(x, sigma=5 / dt)
     # return ndimage.uniform_filter(x, size=int(15 / dt))
 
 
