@@ -23,24 +23,36 @@ data_sources = {
 }
 
 
-def read(name):
+def read(name, estimator_order=100):
     source = data_sources[name][0]
     colname = data_sources[name][1]
 
     df = pd.read_csv(source)
 
-    raw_time = (df["timestamp"].values - timestamp_0) / 1e6
-    data = df[colname].values
+    raw_time = (df["timestamp"].values.astype(float) - timestamp_0) / 1e6
+    data = df[colname].values.astype(float)
 
     mask = (raw_time > raw_time_takeoff) & (raw_time < raw_time_landing)
 
     time = raw_time[mask] - raw_time_takeoff
     data = data[mask]
 
-    estimated_error = np.std(np.diff(np.diff(data))) / np.sqrt(6)
-    print(f"{name} estimated error: {estimated_error}")
+    diff_data = data
 
-    w = 1 / estimated_error * np.ones_like(data)
+    for _ in range(estimator_order):
+        diff_data = np.diff(diff_data)
+
+    from scipy.special import binom
+
+    estimated_noise_standard_deviation = (
+        np.std(  # Standard deviation
+            diff_data / np.sqrt(binom(2 * estimator_order, estimator_order))
+        )
+    )
+
+    print(f"{name} estimated noise stdev: {estimated_noise_standard_deviation}")
+
+    w = 1 / estimated_noise_standard_deviation * np.ones_like(data)
 
     interpolator = interpolate.UnivariateSpline(
         x=time,
@@ -409,6 +421,8 @@ plt.plot(
 ##### Plot fit
 CL_plot = np.linspace(0, 1.8, 1000)
 CD_plot = steady_state_CD(CL_plot)
+
+LD_max = np.max(CL_plot / CD_plot)
 
 _line, = plt.plot(
     CD_plot,
