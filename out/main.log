@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.7.18)  24 MAY 2023 21:41
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.7.18)  25 MAY 2023 13:05
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -1952,126 +1952,133 @@ LaTeX Font Info:    Font shape `T1/ntxtlf/m/it' will be
 LaTeX Font Info:    Font shape `T1/ntxtlf/b/n' will be
 (Font)              scaled to size 10.0pt on input line 18.
 LaTeX Font Info:    Font shape `T1/ntxtlf/m/n' will be
-(Font)              scaled to size 12.0pt on input line 22.
+(Font)              scaled to size 12.0pt on input line 45.
 LaTeX Font Info:    Font shape `T1/ntxtlf/b/n' will be
-(Font)              scaled to size 12.0pt on input line 22.
+(Font)              scaled to size 12.0pt on input line 45.
  [1
 
 {c:/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 LaTeX Font Info:    Font shape `T1/ntxtlf/m/n' will be
-(Font)              scaled to size 5.5pt on input line 73.
-
-
-LaTeX Warning: Reference `sect:noise-std' on page 2 undefined on input line 93.
-
-
-[2]
-<figures/overall_procedure.pdf, id=113, 583.17876pt x 477.785pt>
+(Font)              scaled to size 5.5pt on input line 75.
+ [2]
+<figures/overall_procedure.pdf, id=135, 583.17876pt x 477.785pt>
 File: figures/overall_procedure.pdf Graphic file (type pdf)
 <use figures/overall_procedure.pdf>
-Package pdftex.def Info: figures/overall_procedure.pdf  used on input line 103.
+Package pdftex.def Info: figures/overall_procedure.pdf  used on input line 105.
 
 (pdftex.def)             Requested size: 469.75502pt x 375.69261pt.
  [3 <./figures/overall_procedure.pdf>]
-
-LaTeX Warning: Reference `subsec:solar_surfer_drawing' on page 4 undefined on i
-nput line 113.
-
-<assets/Flight1_02549.JPG, id=131, 1238.91429pt x 825.94286pt>
+<assets/Flight1_02549.JPG, id=155, 1238.91429pt x 825.94286pt>
 File: assets/Flight1_02549.JPG Graphic file (type jpg)
 <use assets/Flight1_02549.JPG>
-Package pdftex.def Info: assets/Flight1_02549.JPG  used on input line 122.
+Package pdftex.def Info: assets/Flight1_02549.JPG  used on input line 124.
 (pdftex.def)             Requested size: 211.38832pt x 140.92514pt.
 LaTeX Font Info:    Font shape `T1/ntxtlf/b/n' will be
-(Font)              scaled to size 9.0pt on input line 123.
+(Font)              scaled to size 9.0pt on input line 125.
 LaTeX Font Info:    Font shape `T1/ntxtlf/b/it' will be
-(Font)              scaled to size 9.0pt on input line 123.
-<assets/flight3-circuit.png, id=132, 1573.077pt x 924.45375pt>
+(Font)              scaled to size 9.0pt on input line 125.
+<assets/flight3-circuit.png, id=156, 1573.077pt x 924.45375pt>
 File: assets/flight3-circuit.png Graphic file (type png)
 <use assets/flight3-circuit.png>
-Package pdftex.def Info: assets/flight3-circuit.png  used on input line 128.
+Package pdftex.def Info: assets/flight3-circuit.png  used on input line 130.
 (pdftex.def)             Requested size: 240.04555pt x 141.06009pt.
 LaTeX Font Info:    Font shape `T1/ntxtlf/b/it' will be
-(Font)              scaled to size 10.0pt on input line 132.
-<figures/flight_raw_data.pdf, id=135, 469.755pt x 325.215pt>
+(Font)              scaled to size 10.0pt on input line 134.
+<figures/flight_raw_data.pdf, id=159, 469.755pt x 325.215pt>
 File: figures/flight_raw_data.pdf Graphic file (type pdf)
 <use figures/flight_raw_data.pdf>
-Package pdftex.def Info: figures/flight_raw_data.pdf  used on input line 140.
+Package pdftex.def Info: figures/flight_raw_data.pdf  used on input line 142.
 (pdftex.def)             Requested size: 469.75502pt x 325.2142pt.
-[4 <./assets/Flight1_02549.JPG> <./assets/flight3-circuit.png>]
-<figures/power_polar_naive.pdf, id=146, 469.755pt x 252.945pt>
+ [4 <./assets/Flight1_02549.JPG> <./assets/flight3-circuit.png> <./figures/flig
+ht_raw_data.pdf>]
+<figures/power_polar_naive.pdf, id=215, 469.755pt x 252.945pt>
 File: figures/power_polar_naive.pdf Graphic file (type pdf)
 <use figures/power_polar_naive.pdf>
-Package pdftex.def Info: figures/power_polar_naive.pdf  used on input line 164.
+Package pdftex.def Info: figures/power_polar_naive.pdf  used on input line 166.
 
 (pdftex.def)             Requested size: 469.75502pt x 252.94438pt.
- [5 <./figures/flight_raw_data.pdf>]
-<figures/under_over_fitting.pdf, id=199, 505.89pt x 433.62pt>
+ [5]
+<figures/under_over_fitting.pdf, id=223, 505.89pt x 433.62pt>
 File: figures/under_over_fitting.pdf Graphic file (type pdf)
 <use figures/under_over_fitting.pdf>
-Package pdftex.def Info: figures/under_over_fitting.pdf  used on input line 182
+Package pdftex.def Info: figures/under_over_fitting.pdf  used on input line 184
 .
 (pdftex.def)             Requested size: 469.75502pt x 402.65372pt.
  [6 <./figures/power_polar_naive.pdf>] [7 <./figures/under_over_fitting.pdf>] [
 8]
-<figures/noise_variance_demo_procedure.pdf, id=327, 316.18124pt x 550.055pt>
+<figures/noise_variance_demo_procedure.pdf, id=350, 316.18124pt x 550.055pt>
 File: figures/noise_variance_demo_procedure.pdf Graphic file (type pdf)
 <use figures/noise_variance_demo_procedure.pdf>
 Package pdftex.def Info: figures/noise_variance_demo_procedure.pdf  used on inp
-ut line 257.
+ut line 260.
 (pdftex.def)             Requested size: 259.27512pt x 493.1483pt.
  [9] [10 <./figures/noise_variance_demo_procedure.pdf>]
 
 Package amsmath Warning: Foreign command \atopwithdelims;
 (amsmath)                \frac or \genfrac should be used instead
-(amsmath)                 on input line 304.
+(amsmath)                 on input line 307.
 
-<figures/noise_variance_higher_order.pdf, id=354, 469.755pt x 325.215pt>
+<figures/noise_variance_higher_order.pdf, id=377, 469.755pt x 325.215pt>
 File: figures/noise_variance_higher_order.pdf Graphic file (type pdf)
 <use figures/noise_variance_higher_order.pdf>
 Package pdftex.def Info: figures/noise_variance_higher_order.pdf  used on input
- line 328.
+ line 331.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 [11 <./figures/noise_variance_higher_order.pdf>]
-<figures/power_polar_spline_but_no_physics.pdf, id=450, 469.755pt x 252.945pt>
+<figures/power_polar_spline_but_no_physics.pdf, id=475, 469.755pt x 252.945pt>
 File: figures/power_polar_spline_but_no_physics.pdf Graphic file (type pdf)
 <use figures/power_polar_spline_but_no_physics.pdf>
 Package pdftex.def Info: figures/power_polar_spline_but_no_physics.pdf  used on
- input line 344.
+ input line 347.
 (pdftex.def)             Requested size: 469.75386pt x 252.94438pt.
- [12 <./figures/power_polar_spline_but_no_physics.pdf>] [13]
-<assets/seaway_mini_packet_Page_1.png, id=512, 614.295pt x 794.97pt>
+ [12 <./figures/power_polar_spline_but_no_physics.pdf>] [13] [14]
+<figures/power_curve_with_physics.pdf, id=572, 469.755pt x 252.945pt>
+File: figures/power_curve_with_physics.pdf Graphic file (type pdf)
+<use figures/power_curve_with_physics.pdf>
+Package pdftex.def Info: figures/power_curve_with_physics.pdf  used on input li
+ne 497.
+(pdftex.def)             Requested size: 469.75386pt x 252.94438pt.
+<figures/aerodynamic_polar_with_physics.pdf, id=574, 462.52798pt x 346.89601pt>
+
+File: figures/aerodynamic_polar_with_physics.pdf Graphic file (type pdf)
+<use figures/aerodynamic_polar_with_physics.pdf>
+Package pdftex.def Info: figures/aerodynamic_polar_with_physics.pdf  used on in
+put line 506.
+(pdftex.def)             Requested size: 462.52684pt x 346.89516pt.
+LaTeX Font Info:    Trying to load font information for T1+ntxtt on input line 
+515.
+
+(c:/texlive/2021/texmf-dist/tex/latex/newtx/t1ntxtt.fd
+File: t1ntxtt.fd 2012/04/20 v3.1
+)
+LaTeX Font Info:    Font shape `T1/ntxtt/m/n' will be
+(Font)              scaled to size 10.0pt on input line 515.
+Package microtype Info: Loading generic protrusion settings for font family
+(microtype)             `ntxtt' (encoding: T1).
+(microtype)             For optimal results, create family-specific settings.
+(microtype)             See the microtype manual for details.
+ [15 <./figures/power_curve_with_physics.pdf>] [16 <./figures/aerodynamic_polar
+_with_physics.pdf>]
+<assets/seaway_mini_packet_Page_1.png, id=678, 614.295pt x 794.97pt>
 File: assets/seaway_mini_packet_Page_1.png Graphic file (type png)
 <use assets/seaway_mini_packet_Page_1.png>
 Package pdftex.def Info: assets/seaway_mini_packet_Page_1.png  used on input li
-ne 376.
+ne 534.
 (pdftex.def)             Requested size: 469.75502pt x 607.9196pt.
- [14 <./assets/seaway_mini_packet_Page_1.png (PNG copy)>]
 
-LaTeX Warning: Reference `eq:arbitrary_order_noise_estimator' on page 15 undefi
-ned on input line 384.
-
+[17 <./assets/seaway_mini_packet_Page_1.png (PNG copy)>]
 \openout4 = `main.pyg'.
+
 
 (./out/_minted-main/default-pyg-prefix.pygstyle)
 (./out/_minted-main/pastie.pygstyle)
 (./out/_minted-main/F1449F39C46D43E5B329472F1CD5BA648710EAAD90CD75D284D510F8C58
 491BD.pygtex
-LaTeX Font Info:    Trying to load font information for T1+ntxtt on input line 
-1.
- (c:/texlive/2021/texmf-dist/tex/latex/newtx/t1ntxtt.fd
-File: t1ntxtt.fd 2012/04/20 v3.1
-)
 LaTeX Font Info:    Font shape `T1/ntxtt/m/n' will be
 (Font)              scaled to size 8.0pt on input line 1.
-Package microtype Info: Loading generic protrusion settings for font family
-(microtype)             `ntxtt' (encoding: T1).
-(microtype)             For optimal results, create family-specific settings.
-(microtype)             See the microtype manual for details.
 LaTeX Font Info:    Trying to load font information for T1+txtt on input line 2
 .
-
-(c:/texlive/2021/texmf-dist/tex/latex/txfonts/t1txtt.fd
+ (c:/texlive/2021/texmf-dist/tex/latex/txfonts/t1txtt.fd
 File: t1txtt.fd 2000/12/15 v3.1
 )
 LaTeX Font Info:    Font shape `T1/ntxtt/b/n' in size <8> not available
@@ -2120,39 +2127,33 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             See the microtype manual for details.
 )
 Package hyperref Info: bookmark level for unknown listing defaults to 0 on inpu
-t line 411.
+t line 569.
  (out/main.bbl
 LaTeX Font Info:    Font shape `T1/ntxtlf/m/n' will be
 (Font)              scaled to size 9.0pt on input line 1.
 LaTeX Font Info:    Font shape `T1/ntxtlf/m/it' will be
 (Font)              scaled to size 9.0pt on input line 11.
+LaTeX Font Info:    Font shape `T1/ntxtt/m/n' will be
+(Font)              scaled to size 9.0pt on input line 17.
 LaTeX Font Info:    Font shape `OT1/ntxtlf/m/n' will be
 (Font)              scaled to size 9.0pt on input line 17.
 LaTeX Font Info:    Font shape `TS1/ntxtlf/m/n' will be
 (Font)              scaled to size 9.0pt on input line 17.
-LaTeX Font Info:    Font shape `T1/ntxtt/m/n' will be
-(Font)              scaled to size 9.0pt on input line 19.
-)
-[15] (out/main.aux)
 
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
+[18]) [19] (out/main.aux)
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 44ED72DC889134D3BE561E6E75AF0E1F;5070.
+(rerunfilecheck)             Checksum: 770D96B4D0562D58DF1812F499EDD6C0;6265.
 runsystem(del out\\main.pyg)...executed.
 
  ) 
 Here is how much of TeX's memory you used:
- 40774 strings out of 478542
- 794745 string characters out of 5854396
- 1160275 words of memory out of 5000000
- 57574 multiletter control sequences out of 15000+600000
- 501074 words of font info for 257 fonts, out of 8000000 for 9000
+ 40876 strings out of 478542
+ 796990 string characters out of 5854396
+ 1166340 words of memory out of 5000000
+ 57623 multiletter control sequences out of 15000+600000
+ 502624 words of font info for 272 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 99i,10n,131p,979b,814s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 99i,15n,131p,979b,965s stack positions out of 5000i,500n,10000p,200000b,80000s
 {c:/texlive/2021/texmf-dist/fonts/enc/dvips/tex-gyre/q-ts1.enc}{c:/texlive/20
 21/texmf-dist/fonts/enc/dvips/newtx/ntx-ec-tlf.enc}{c:/texlive/2021/texmf-dist/
 fonts/enc/dvips/newtx/ntx-ot1-tlf.enc}<c:/texlive/2021/texmf-dist/fonts/type1/p
@@ -2167,10 +2168,10 @@ e/2021/texmf-dist/fonts/type1/public/newtx/txsys.pfb><c:/texlive/2021/texmf-dis
 t/fonts/type1/public/newtx/ztmb.pfb><c:/texlive/2021/texmf-dist/fonts/type1/pub
 lic/newtx/ztmbi.pfb><c:/texlive/2021/texmf-dist/fonts/type1/public/newtx/ztmr.p
 fb><c:/texlive/2021/texmf-dist/fonts/type1/public/newtx/ztmri.pfb>
-Output written on out/main.pdf (15 pages, 8915655 bytes).
+Output written on out/main.pdf (19 pages, 9130929 bytes).
 PDF statistics:
- 609 PDF objects out of 1000 (max. 8388607)
- 297 compressed objects within 3 object streams
- 61 named destinations out of 1000 (max. 500000)
- 73963 words of extra memory for PDF output out of 74296 (max. 10000000)
+ 790 PDF objects out of 1000 (max. 8388607)
+ 394 compressed objects within 4 object streams
+ 86 named destinations out of 1000 (max. 500000)
+ 74525 words of extra memory for PDF output out of 89155 (max. 10000000)
 

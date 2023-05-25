@@ -1,4 +1,4 @@
-\begin{thebibliography}{2}
+\begin{thebibliography}{7}
 \newcommand{\enquote}[1]{``#1''}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
@@ -10,12 +10,43 @@
 \bibitem[{Wahba(1990)}]{wahba}
 Wahba, G., \emph{Spline Models for Observational Data}, 1990.
 
+\bibitem[{Gramacy(2020)}]{surrogates}
+Gramacy, R.~B., \emph{Surrogates: {G}aussian Process Modeling, Design and
+  Optimization for the Applied Sciences}, Chapman Hall/CRC, Boca Raton,
+  Florida, 2020.
+\newblock \url{http://bobby.gramacy.com/surrogates/}.
+
 \bibitem[{{Trevor Hastie} et~al.(2017){Trevor Hastie}, {Robert Tibshirani}, and
   {Jerome Friedman}}]{elements_of_statistical_learning}
 {Trevor Hastie}, {Robert Tibshirani}, and {Jerome Friedman}, \emph{The
   {Elements} of {Statistical} {Learning}: {Data} {Mining}, {Inference}, and
-  {Prediction}}, 2\textsuperscript{nd} ed., 2017.
+  {Prediction}}, 2\textsuperscript{nd} ed., Springer Series in Statistics,
+  2017.
+\newblock \urlprefix\url{https://hastie.su.domains/ElemStatLearn/}.
+
+\bibitem[{Spakovszky et~al.(2007)Spakovszky, Greitzer, and
+  Waitz}]{unified_propellers}
+Spakovszky, Z., Greitzer, E.~M., and Waitz, I.~A., \enquote{{MIT Unified
+  Engineering Course Notes, Thermodynamics and Propulsion}: Performance of
+  Propellers,} 2007.
 \newblock
-  \urlprefix\url{https://hastie.su.domains/ElemStatLearn/printings/ESLII_print12_toc.pdf}.
+  \urlprefix\url{https://web.mit.edu/16.unified/www/FALL/thermodynamics/notes/node86.html}.
+
+\bibitem[{Brunton and Kutz(2017)}]{brunton}
+Brunton, S.~L., and Kutz, J.~N., \emph{Data {Driven} {Science} \&
+  {Engineering}}, 2017.
+
+\bibitem[{Wächter and Biegler(2006)}]{ipopt}
+Wächter, A., and Biegler, L.~T., \enquote{On the implementation of an
+  interior-point filter line-search algorithm for large-scale nonlinear
+  programming,} \emph{Mathematical Programming}, Vol. 106, No.~1, 2006, pp.
+  25--57.
+\newblock \doi{10.1007/s10107-004-0559-y},
+  \urlprefix\url{http://link.springer.com/10.1007/s10107-004-0559-y}.
+
+\bibitem[{Sharpe(2021)}]{aerosandbox}
+Sharpe, P.~D., \enquote{AeroSandbox: A Differentiable Framework for Aircraft
+  Design Optimization,} Master's thesis, Massachusetts Institute of Technology,
+  2021.
 
 \end{thebibliography}
