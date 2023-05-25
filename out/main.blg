@@ -1,0 +1,99 @@
+This is BibTeX, Version 0.99d (TeX Live 2021/W32TeX)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: main.aux
+The style file: new-aiaa.bst
+Illegal, another \bibstyle command---line 22 of file main.aux
+ : \bibstyle
+ :          {plain}
+I'm skipping whatever remains of this command
+Database file #1: main.bib
+You're missing a field name---line 3 of file main.bib
+ : 
+ : %  title={Reverse Flow Radius in Vortex Chambers},
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+You're missing a field name---line 27 of file main.bib
+ : 
+ : %  title={Planetary Flight Surge Faces Budget Realities},
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+You're missing a field name---line 47 of file main.bib
+ : 
+ : %  title={NASA Considers Switch to Delta 2},
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+You're missing a field name---line 67 of file main.bib
+ : 
+ : %  title={Computational Methods for Fluid Flow},
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+You're missing a field name---line 87 of file main.bib
+ : 
+ : %  title={Aerothermodynamics of Gas Turbine and Rocket Propulsion},
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+You're missing a field name---line 107 of file main.bib
+ : 
+ : %  title={Techniques for Collision Prevention, Impact Stability, and Force Control by Space Manipulators},
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+You're missing a field name---line 131 of file main.bib
+ : 
+ : %  title={Spacecraft Thermal Control, Design, and Operation},
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+You're missing a field name---line 155 of file main.bib
+ : 
+ : %  title={Fluid Mechanics Proceedings},
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+You're missing a field name---line 169 of file main.bib
+ : 
+ : %  title={Nonequilibrium Radiation for Earth Entry},
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Warning--missing publisher in wahba
+Warning--missing publisher in elements_of_statistical_learning
+You've used 2 entries,
+            3319 wiz_defined-function locations,
+            686 strings with 5722 characters,
+and the built_in function-call counts, 895 in all, are:
+= -- 52
+> -- 28
+< -- 2
++ -- 14
+- -- 9
+* -- 71
+:= -- 140
+add.period$ -- 3
+call.type$ -- 2
+change.case$ -- 10
+chr.to.int$ -- 6
+cite$ -- 4
+duplicate$ -- 73
+empty$ -- 79
+format.name$ -- 12
+if$ -- 168
+int.to.chr$ -- 1
+int.to.str$ -- 3
+missing$ -- 17
+newline$ -- 17
+num.names$ -- 6
+pop$ -- 38
+preamble$ -- 1
+purify$ -- 8
+quote$ -- 0
+skip$ -- 25
+stack$ -- 0
+substring$ -- 26
+swap$ -- 35
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 8
+warning$ -- 2
+while$ -- 5
+width$ -- 0
+write$ -- 30
+(There were 10 error messages)

@@ -1,0 +1,170 @@
+%\usepackage{cmap}
+%\usepackage[T1]{fontenc}
+
+%\usepackage{microtype}
+\usepackage{amsmath}
+\let\Bbbk\relax
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{pgf}
+\usepackage{svg}
+\usepackage{float}
+\usepackage{optidef}
+\usepackage{ifdraft}
+%\usepackage{hyperref}
+%\usepackage{enumitem}
+
+\renewcommand{\labelitemii}{$\circ$}
+
+\usepackage{eqexpl}
+\eqexplSetIntro{where:} % set parenthesis in the left of the first item
+\eqexplSetDelim{=} % set delimiter to "="
+
+\usepackage{ar}
+\usepackage{gensymb}
+
+\usepackage{multicol}
+
+\usepackage{siunitx}
+\sisetup{}
+
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{tablefootnote}
+
+\usepackage{mdframed}
+\newmdenv[
+    topline=false,
+    bottomline=false,
+    skipabove=\topsep,
+    skipbelow=\topsep,
+    innerleftmargin=30pt,
+    innerrightmargin=30pt,
+    backgroundcolor=black!5
+]{example}
+
+%\usepackage{fontspec}
+%\setmonofont{Source Code Pro}
+%\setmainfont{TeX Gyre Pagella}
+%\usepackage[sorting=count,style=numeric]{biblatex}
+%\addbibresource{main.bib}
+
+\usepackage{adjustbox}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usetikzlibrary{shapes.geometric}
+\usetikzlibrary{shapes.arrows}
+\usetikzlibrary{decorations.pathmorphing, decorations.pathreplacing, calc}
+
+\usepackage{tikz-cd}
+\tikzcdset{
+    math mode=false
+}
+
+\usepackage[outputdir=out,final=true]{minted}
+\usepackage{xcolor}
+
+\definecolor{c1}{HTML}{64ACBE}
+\definecolor{c2}{HTML}{EE442F}
+\definecolor{c3}{HTML}{601A4A}
+
+\renewcommand{\theFancyVerbLine}{\sffamily
+    \textcolor[rgb]{0.8,0.8,0.8}{\scriptsize\oldstylenums{\arabic{FancyVerbLine}}}
+}
+\usemintedstyle{pastie}
+%\usemintedstyle{jupyter_python}
+%\usemintedstyle{rainbow_dash}
+%\usemintedstyle{colorful}
+\setminted{
+    frame=lines,
+    framesep=2mm,
+    numbers=left,
+    fontsize=\footnotesize,
+    autogobble=true,
+    baselinestretch=1.15,
+    breaklines
+}
+\setmintedinline{
+    breaklines
+}
+
+\usepackage{longtable}
+
+\parskip 3pt
+
+\newcommand{\thalf}{{\textstyle \frac{1}{2}}}
+\newcommand{\tquart}{{\textstyle \frac{1}{4}}}
+\newcommand{\teighth}{{\textstyle \frac{1}{8}}}
+
+\newcommand{\pkp}{{\scriptstyle (k)}}
+\newcommand{\ptp}{{\scriptstyle (t)}}
+\newcommand{\pbtp}{{\scriptstyle (\bar{t})}}
+\newcommand{\pbtpp}{{\scriptstyle (\bar{t}')}}
+\newcommand{\pUp}{{\scriptstyle (U)}}
+\newcommand{\pUkp}{{\scriptstyle (U,\ks)}}
+
+\newcommand{\ra}{{\rm a}}
+\newcommand{\rd}{{\rm d}}
+\newcommand{\rt}{{\rm t}}
+\newcommand{\rw}{{\rm w}}
+\newcommand{\IA}{I_{\!A}}
+\newcommand{\mA}{m_{\!A}}
+\renewcommand{\tfrac}[2]{{\textstyle \frac{#1}{#2}}}
+\newcommand{\bLh}{\bar{L}_h}
+\newcommand{\bLt}{\bar{L}_\theta}
+\newcommand{\bMh}{\bar{M}_h}
+\newcommand{\bMt}{\bar{M}_\theta}
+
+\newcommand{\EI}{E\!I}
+\newcommand{\GJ}{G\!J}
+
+\newcommand{\rref}{{\rm ref}}
+
+\newcommand{\clo}{c_{\ell_0}}
+\newcommand{\cla}{c_{\ell_\salpha}}
+\newcommand{\cmo}{c_{m_0}}
+\newcommand{\cma}{c_{m_\salpha}}
+\newcommand{\CL}{C_{\!L}}
+\newcommand{\CLo}{C_{\!L_0}}
+\newcommand{\CLh}{C_{\!L_h}}
+\newcommand{\CLa}{C_{\!L_\salpha}}
+\newcommand{\CLt}{C_{\!L_\stheta}}
+\newcommand{\CLd}{C_{\!L_\sdelta}}
+\newcommand{\CLda}{C_{\!L_{\sdelta_\ra}}}
+\newcommand{\CLdt}{C_{\!L_{\sdelta_\rt}}}
+\newcommand{\Cm}{C_{\!m}}
+\newcommand{\Cmo}{C_{\!m_0}}
+\newcommand{\Cmh}{C_{\!m_h}}
+\newcommand{\Cma}{C_{\!m_\salpha}}
+\newcommand{\Cmt}{C_{\!m_\stheta}}
+\newcommand{\Cmd}{C_{\!m_\sdelta}}
+\newcommand{\Cmda}{C_{\!m_{\sdelta_\ra}}}
+\newcommand{\Cmdt}{C_{\!m_{\sdelta_\rt}}}
+
+\newcommand{\sra}{{\scriptstyle \rm a}}
+\newcommand{\srt}{{\scriptstyle \rm t}}
+\newcommand{\srw}{{\scriptstyle \rm w}}
+
+\newcommand{\ks}{k_{\rm sym}}
+
+\newcommand{\fs}{f_{\rm sym}}
+
+\newcommand{\salpha}{{\scriptstyle \alpha}}
+\newcommand{\sdelta}{{\scriptstyle \delta}}
+\newcommand{\stheta}{{\scriptstyle \theta}}
+
+%\newcommand{\AR}{A\!\!R}
+\newcommand{\Acal}{{\cal A}}
+\newcommand{\Ccal}{{\cal C}}
+\newcommand{\Scal}{{\cal S}}
+\newcommand{\Vcal}{{\cal V}}
+
+\newcommand{\beqa}{\begin{eqnarray}}
+\newcommand{\eeqa}{\end{eqnarray}}
+\newcommand{\beq}{\begin{equation}}
+\newcommand{\eeq}{\end{equation}}
+
+ 

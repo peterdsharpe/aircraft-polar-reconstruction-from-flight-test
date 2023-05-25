@@ -1,0 +1,100 @@
+
+\makeatletter
+\def\PYGpastie@reset{\let\PYGpastie@it=\relax \let\PYGpastie@bf=\relax%
+    \let\PYGpastie@ul=\relax \let\PYGpastie@tc=\relax%
+    \let\PYGpastie@bc=\relax \let\PYGpastie@ff=\relax}
+\def\PYGpastie@tok#1{\csname PYGpastie@tok@#1\endcsname}
+\def\PYGpastie@toks#1+{\ifx\relax#1\empty\else%
+    \PYGpastie@tok{#1}\expandafter\PYGpastie@toks\fi}
+\def\PYGpastie@do#1{\PYGpastie@bc{\PYGpastie@tc{\PYGpastie@ul{%
+    \PYGpastie@it{\PYGpastie@bf{\PYGpastie@ff{#1}}}}}}}
+\def\PYGpastie#1#2{\PYGpastie@reset\PYGpastie@toks#1+\relax+\PYGpastie@do{#2}}
+
+\@namedef{PYGpastie@tok@w}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\@namedef{PYGpastie@tok@c}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\@namedef{PYGpastie@tok@cp}{\let\PYGpastie@bf=\textbf\def\PYGpastie@tc##1{\textcolor[rgb]{0.80,0.00,0.00}{##1}}}
+\@namedef{PYGpastie@tok@cs}{\let\PYGpastie@bf=\textbf\def\PYGpastie@tc##1{\textcolor[rgb]{0.80,0.00,0.00}{##1}}\def\PYGpastie@bc##1{{\setlength{\fboxsep}{0pt}\colorbox[rgb]{1.00,0.94,0.94}{\strut ##1}}}}
+\@namedef{PYGpastie@tok@s}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.87,0.13,0.00}{##1}}\def\PYGpastie@bc##1{{\setlength{\fboxsep}{0pt}\colorbox[rgb]{1.00,0.94,0.94}{\strut ##1}}}}
+\@namedef{PYGpastie@tok@sr}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.00,0.53,0.00}{##1}}\def\PYGpastie@bc##1{{\setlength{\fboxsep}{0pt}\colorbox[rgb]{1.00,0.94,1.00}{\strut ##1}}}}
+\@namedef{PYGpastie@tok@sx}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.13,0.73,0.13}{##1}}\def\PYGpastie@bc##1{{\setlength{\fboxsep}{0pt}\colorbox[rgb]{0.94,1.00,0.94}{\strut ##1}}}}
+\@namedef{PYGpastie@tok@ss}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.67,0.40,0.00}{##1}}\def\PYGpastie@bc##1{{\setlength{\fboxsep}{0pt}\colorbox[rgb]{1.00,0.94,0.94}{\strut ##1}}}}
+\@namedef{PYGpastie@tok@si}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.20,0.20,0.73}{##1}}\def\PYGpastie@bc##1{{\setlength{\fboxsep}{0pt}\colorbox[rgb]{1.00,0.94,0.94}{\strut ##1}}}}
+\@namedef{PYGpastie@tok@se}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}\def\PYGpastie@bc##1{{\setlength{\fboxsep}{0pt}\colorbox[rgb]{1.00,0.94,0.94}{\strut ##1}}}}
+\@namedef{PYGpastie@tok@ow}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.00,0.53,0.00}{##1}}}
+\@namedef{PYGpastie@tok@k}{\let\PYGpastie@bf=\textbf\def\PYGpastie@tc##1{\textcolor[rgb]{0.00,0.53,0.00}{##1}}}
+\@namedef{PYGpastie@tok@kp}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.00,0.53,0.00}{##1}}}
+\@namedef{PYGpastie@tok@kt}{\let\PYGpastie@bf=\textbf\def\PYGpastie@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\@namedef{PYGpastie@tok@nc}{\let\PYGpastie@bf=\textbf\def\PYGpastie@tc##1{\textcolor[rgb]{0.73,0.00,0.40}{##1}}}
+\@namedef{PYGpastie@tok@ne}{\let\PYGpastie@bf=\textbf\def\PYGpastie@tc##1{\textcolor[rgb]{0.73,0.00,0.40}{##1}}}
+\@namedef{PYGpastie@tok@nf}{\let\PYGpastie@bf=\textbf\def\PYGpastie@tc##1{\textcolor[rgb]{0.00,0.40,0.73}{##1}}}
+\@namedef{PYGpastie@tok@py}{\let\PYGpastie@bf=\textbf\def\PYGpastie@tc##1{\textcolor[rgb]{0.20,0.40,0.60}{##1}}}
+\@namedef{PYGpastie@tok@nn}{\let\PYGpastie@bf=\textbf\def\PYGpastie@tc##1{\textcolor[rgb]{0.73,0.00,0.40}{##1}}}
+\@namedef{PYGpastie@tok@nb}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.00,0.20,0.53}{##1}}}
+\@namedef{PYGpastie@tok@nv}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.20,0.40,0.60}{##1}}}
+\@namedef{PYGpastie@tok@vc}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.20,0.40,0.60}{##1}}}
+\@namedef{PYGpastie@tok@vi}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.20,0.20,0.73}{##1}}}
+\@namedef{PYGpastie@tok@vg}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.87,0.47,0.00}{##1}}}
+\@namedef{PYGpastie@tok@no}{\let\PYGpastie@bf=\textbf\def\PYGpastie@tc##1{\textcolor[rgb]{0.00,0.20,0.40}{##1}}}
+\@namedef{PYGpastie@tok@nt}{\let\PYGpastie@bf=\textbf\def\PYGpastie@tc##1{\textcolor[rgb]{0.73,0.00,0.40}{##1}}}
+\@namedef{PYGpastie@tok@na}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.20,0.40,0.60}{##1}}}
+\@namedef{PYGpastie@tok@nd}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.33,0.33,0.33}{##1}}}
+\@namedef{PYGpastie@tok@nl}{\let\PYGpastie@it=\textit\def\PYGpastie@tc##1{\textcolor[rgb]{0.20,0.40,0.60}{##1}}}
+\@namedef{PYGpastie@tok@m}{\let\PYGpastie@bf=\textbf\def\PYGpastie@tc##1{\textcolor[rgb]{0.00,0.00,0.87}{##1}}}
+\@namedef{PYGpastie@tok@gh}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.20,0.20,0.20}{##1}}}
+\@namedef{PYGpastie@tok@gu}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PYGpastie@tok@gd}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.00,0.00,0.00}{##1}}\def\PYGpastie@bc##1{{\setlength{\fboxsep}{0pt}\colorbox[rgb]{1.00,0.87,0.87}{\strut ##1}}}}
+\@namedef{PYGpastie@tok@gi}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.00,0.00,0.00}{##1}}\def\PYGpastie@bc##1{{\setlength{\fboxsep}{0pt}\colorbox[rgb]{0.87,1.00,0.87}{\strut ##1}}}}
+\@namedef{PYGpastie@tok@gr}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.67,0.00,0.00}{##1}}}
+\@namedef{PYGpastie@tok@ge}{\let\PYGpastie@it=\textit}
+\@namedef{PYGpastie@tok@gs}{\let\PYGpastie@bf=\textbf}
+\@namedef{PYGpastie@tok@gp}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.33,0.33,0.33}{##1}}}
+\@namedef{PYGpastie@tok@go}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\@namedef{PYGpastie@tok@gt}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.67,0.00,0.00}{##1}}}
+\@namedef{PYGpastie@tok@err}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.65,0.09,0.09}{##1}}\def\PYGpastie@bc##1{{\setlength{\fboxsep}{0pt}\colorbox[rgb]{0.89,0.82,0.82}{\strut ##1}}}}
+\@namedef{PYGpastie@tok@kc}{\let\PYGpastie@bf=\textbf\def\PYGpastie@tc##1{\textcolor[rgb]{0.00,0.53,0.00}{##1}}}
+\@namedef{PYGpastie@tok@kd}{\let\PYGpastie@bf=\textbf\def\PYGpastie@tc##1{\textcolor[rgb]{0.00,0.53,0.00}{##1}}}
+\@namedef{PYGpastie@tok@kn}{\let\PYGpastie@bf=\textbf\def\PYGpastie@tc##1{\textcolor[rgb]{0.00,0.53,0.00}{##1}}}
+\@namedef{PYGpastie@tok@kr}{\let\PYGpastie@bf=\textbf\def\PYGpastie@tc##1{\textcolor[rgb]{0.00,0.53,0.00}{##1}}}
+\@namedef{PYGpastie@tok@bp}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.00,0.20,0.53}{##1}}}
+\@namedef{PYGpastie@tok@fm}{\let\PYGpastie@bf=\textbf\def\PYGpastie@tc##1{\textcolor[rgb]{0.00,0.40,0.73}{##1}}}
+\@namedef{PYGpastie@tok@vm}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.20,0.40,0.60}{##1}}}
+\@namedef{PYGpastie@tok@sa}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.87,0.13,0.00}{##1}}\def\PYGpastie@bc##1{{\setlength{\fboxsep}{0pt}\colorbox[rgb]{1.00,0.94,0.94}{\strut ##1}}}}
+\@namedef{PYGpastie@tok@sb}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.87,0.13,0.00}{##1}}\def\PYGpastie@bc##1{{\setlength{\fboxsep}{0pt}\colorbox[rgb]{1.00,0.94,0.94}{\strut ##1}}}}
+\@namedef{PYGpastie@tok@sc}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.87,0.13,0.00}{##1}}\def\PYGpastie@bc##1{{\setlength{\fboxsep}{0pt}\colorbox[rgb]{1.00,0.94,0.94}{\strut ##1}}}}
+\@namedef{PYGpastie@tok@dl}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.87,0.13,0.00}{##1}}\def\PYGpastie@bc##1{{\setlength{\fboxsep}{0pt}\colorbox[rgb]{1.00,0.94,0.94}{\strut ##1}}}}
+\@namedef{PYGpastie@tok@sd}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.87,0.13,0.00}{##1}}\def\PYGpastie@bc##1{{\setlength{\fboxsep}{0pt}\colorbox[rgb]{1.00,0.94,0.94}{\strut ##1}}}}
+\@namedef{PYGpastie@tok@s2}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.87,0.13,0.00}{##1}}\def\PYGpastie@bc##1{{\setlength{\fboxsep}{0pt}\colorbox[rgb]{1.00,0.94,0.94}{\strut ##1}}}}
+\@namedef{PYGpastie@tok@sh}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.87,0.13,0.00}{##1}}\def\PYGpastie@bc##1{{\setlength{\fboxsep}{0pt}\colorbox[rgb]{1.00,0.94,0.94}{\strut ##1}}}}
+\@namedef{PYGpastie@tok@s1}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.87,0.13,0.00}{##1}}\def\PYGpastie@bc##1{{\setlength{\fboxsep}{0pt}\colorbox[rgb]{1.00,0.94,0.94}{\strut ##1}}}}
+\@namedef{PYGpastie@tok@mb}{\let\PYGpastie@bf=\textbf\def\PYGpastie@tc##1{\textcolor[rgb]{0.00,0.00,0.87}{##1}}}
+\@namedef{PYGpastie@tok@mf}{\let\PYGpastie@bf=\textbf\def\PYGpastie@tc##1{\textcolor[rgb]{0.00,0.00,0.87}{##1}}}
+\@namedef{PYGpastie@tok@mh}{\let\PYGpastie@bf=\textbf\def\PYGpastie@tc##1{\textcolor[rgb]{0.00,0.00,0.87}{##1}}}
+\@namedef{PYGpastie@tok@mi}{\let\PYGpastie@bf=\textbf\def\PYGpastie@tc##1{\textcolor[rgb]{0.00,0.00,0.87}{##1}}}
+\@namedef{PYGpastie@tok@il}{\let\PYGpastie@bf=\textbf\def\PYGpastie@tc##1{\textcolor[rgb]{0.00,0.00,0.87}{##1}}}
+\@namedef{PYGpastie@tok@mo}{\let\PYGpastie@bf=\textbf\def\PYGpastie@tc##1{\textcolor[rgb]{0.00,0.00,0.87}{##1}}}
+\@namedef{PYGpastie@tok@ch}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\@namedef{PYGpastie@tok@cm}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\@namedef{PYGpastie@tok@cpf}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\@namedef{PYGpastie@tok@c1}{\def\PYGpastie@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+
+\def\PYGpastieZbs{\char`\\}
+\def\PYGpastieZus{\char`\_}
+\def\PYGpastieZob{\char`\{}
+\def\PYGpastieZcb{\char`\}}
+\def\PYGpastieZca{\char`\^}
+\def\PYGpastieZam{\char`\&}
+\def\PYGpastieZlt{\char`\<}
+\def\PYGpastieZgt{\char`\>}
+\def\PYGpastieZsh{\char`\#}
+\def\PYGpastieZpc{\char`\%}
+\def\PYGpastieZdl{\char`\$}
+\def\PYGpastieZhy{\char`\-}
+\def\PYGpastieZsq{\char`\'}
+\def\PYGpastieZdq{\char`\"}
+\def\PYGpastieZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYGpastieZat{@}
+\def\PYGpastieZlb{[}
+\def\PYGpastieZrb{]}
+\makeatother
+

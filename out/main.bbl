@@ -1,0 +1,21 @@
+\begin{thebibliography}{2}
+\newcommand{\enquote}[1]{``#1''}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{URL }
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{\discretionary{}{}{}https://doi.org/#1}\else
+  \providecommand{\doi}[1]{\discretionary{}{}{}\urlstyle{rm}\url{https://doi.org/#1}}\fi
+
+\bibitem[{Wahba(1990)}]{wahba}
+Wahba, G., \emph{Spline Models for Observational Data}, 1990.
+
+\bibitem[{{Trevor Hastie} et~al.(2017){Trevor Hastie}, {Robert Tibshirani}, and
+  {Jerome Friedman}}]{elements_of_statistical_learning}
+{Trevor Hastie}, {Robert Tibshirani}, and {Jerome Friedman}, \emph{The
+  {Elements} of {Statistical} {Learning}: {Data} {Mining}, {Inference}, and
+  {Prediction}}, 2\textsuperscript{nd} ed., 2017.
+\newblock
+  \urlprefix\url{https://hastie.su.domains/ElemStatLearn/printings/ESLII_print12_toc.pdf}.
+
+\end{thebibliography}
