@@ -553,7 +553,7 @@ def estimate_noise_standard_deviation(
         data: np.ndarray,
         estimator_order: int = 10,
 ) -> float:
-    ### For speed, pre-compute the log-factorial of integers from 1 to estimator_order
+    ### For speed, pre-compute the log-factorial of integers from 0 to estimator_order
     ln_factorial = lambda x: gammaln(x + 1)
     ln_f = ln_factorial(np.arange(estimator_order + 1))
 
