@@ -6,7 +6,7 @@
         \PYG{n}{data}\PYG{p}{:} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}\PYG{p}{,}
         \PYG{n}{estimator\PYGZus{}order}\PYG{p}{:} \PYG{n+nb}{int} \PYG{o}{=} \PYG{l+m+mi}{10}\PYG{p}{,}
 \PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n+nb}{float}\PYG{p}{:}
-    \PYG{c+c1}{\PYGZsh{}\PYGZsh{}\PYGZsh{} For speed, pre\PYGZhy{}compute the log\PYGZhy{}factorial of integers from 1 to estimator\PYGZus{}order}
+    \PYG{c+c1}{\PYGZsh{}\PYGZsh{}\PYGZsh{} For speed, pre\PYGZhy{}compute the log\PYGZhy{}factorial of integers from 0 to estimator\PYGZus{}order}
     \PYG{n}{ln\PYGZus{}factorial} \PYG{o}{=} \PYG{k}{lambda} \PYG{n}{x}\PYG{p}{:} \PYG{n}{gammaln}\PYG{p}{(}\PYG{n}{x} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{)}
     \PYG{n}{ln\PYGZus{}f} \PYG{o}{=} \PYG{n}{ln\PYGZus{}factorial}\PYG{p}{(}\PYG{n}{np}\PYG{o}{.}\PYG{n}{arange}\PYG{p}{(}\PYG{n}{estimator\PYGZus{}order} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{))}
 
