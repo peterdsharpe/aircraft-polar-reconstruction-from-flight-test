@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.7.18)  2 JUN 2023 16:04
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.7.18)  22 JUN 2023 00:16
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -2072,7 +2072,7 @@ ne 536.
 
 (./out/_minted-main/default-pyg-prefix.pygstyle)
 (./out/_minted-main/pastie.pygstyle)
-(./out/_minted-main/F1449F39C46D43E5B329472F1CD5BA648710EAAD90CD75D284D510F8C58
+(./out/_minted-main/4C5CAFAF806662D8E4E0EDADCBC6C8908710EAAD90CD75D284D510F8C58
 491BD.pygtex
 LaTeX Font Info:    Font shape `T1/ntxtt/m/n' will be
 (Font)              scaled to size 8.0pt on input line 1.
@@ -2149,7 +2149,7 @@ runsystem(del out\\main.pyg)...executed.
 Here is how much of TeX's memory you used:
  40895 strings out of 478542
  797276 string characters out of 5854396
- 1165369 words of memory out of 5000000
+ 1165367 words of memory out of 5000000
  57623 multiletter control sequences out of 15000+600000
  505586 words of font info for 284 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -2168,7 +2168,7 @@ e/2021/texmf-dist/fonts/type1/public/newtx/txsys.pfb><c:/texlive/2021/texmf-dis
 t/fonts/type1/public/newtx/ztmb.pfb><c:/texlive/2021/texmf-dist/fonts/type1/pub
 lic/newtx/ztmbi.pfb><c:/texlive/2021/texmf-dist/fonts/type1/public/newtx/ztmr.p
 fb><c:/texlive/2021/texmf-dist/fonts/type1/public/newtx/ztmri.pfb>
-Output written on out/main.pdf (20 pages, 9134475 bytes).
+Output written on out/main.pdf (20 pages, 9134623 bytes).
 PDF statistics:
  800 PDF objects out of 1000 (max. 8388607)
  402 compressed objects within 5 object streams

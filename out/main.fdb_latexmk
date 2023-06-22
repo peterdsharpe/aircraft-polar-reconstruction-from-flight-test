@@ -1,13 +1,13 @@
 # Fdb version 3
-["bibtex out/main"] 1685735869 "out/main.aux" "out/main.bbl" "out/main" 1687407316
+["bibtex out/main"] 1687407356 "out/main.aux" "out/main.bbl" "out/main" 1687407365
   "./new-aiaa.bst" 1684851601 35686 a60a1aa8bda61b245dd8097a74e21b9a ""
   "c:/texlive/2021/texmf-dist/bibtex/bst/base/plain.bst" 1626618029 20613 bd3fbfa9f64872b81ac57a0dd2ed855f ""
   "main.bib" 1685019950 3276 d4fc556822e5497d3967c313e29340a3 ""
-  "out/main.aux" 1685736244 12638 d077498300fe9cff8b57754bf4e0e19e "pdflatex"
+  "out/main.aux" 1687407364 12638 b3b1326b84bd79a995ebfa3aa607442a "pdflatex"
   (generated)
   "out/main.bbl"
   "out/main.blg"
-["pdflatex"] 1685736240 "main.tex" "out/main.pdf" "main" 1687407316
+["pdflatex"] 1687407360 "main.tex" "out/main.pdf" "main" 1687407365
   "assets/Flight1_02549.JPG" 1684183578 3538944 3bead7586c38d83a313b0abcceaa1d32 ""
   "assets/flight3-circuit.png" 1684248676 3422499 12be697fb6816488317363097dbbbab6 ""
   "assets/seaway_mini_packet_Page_1.png" 1680456560 225478 309f0fb437a9a47d8c01aaa45b01dca2 ""
@@ -333,17 +333,17 @@
   "figures/power_polar_naive.pdf" 1684963330 37623 4a6dd199d70905c5597762c5814a73ad ""
   "figures/power_polar_spline_but_no_physics.pdf" 1684966888 67088 2cd56e4f028d551415b16878d669d8c0 ""
   "figures/under_over_fitting.pdf" 1684952512 49800 b64d51f8133623edcc70448d5ffcad4a ""
-  "main.tex" 1685736236 54182 feeb7a42d151e075055fbded45cabd6b ""
+  "main.tex" 1687407329 54182 af40f831433b39108971f63b0ece4e4f ""
   "new-aiaa.cls" 1684851601 3046 6495496c6ec29c9d8effcadfbb8e6731 ""
-  "out/_minted-main/F1449F39C46D43E5B329472F1CD5BA648710EAAD90CD75D284D510F8C58491BD.pygtex" 1684960224 2495 ce431b0ceeb74a0a2c5ef7df475309b7 ""
+  "out/_minted-main/4C5CAFAF806662D8E4E0EDADCBC6C8908710EAAD90CD75D284D510F8C58491BD.pygtex" 1687407354 2495 c83c8f4371f91ec3dac34dfe050e8649 ""
   "out/_minted-main/default-pyg-prefix.pygstyle" 1684959358 6466 683ea4fd81022f120108d52c508c17f9 ""
   "out/_minted-main/pastie.pygstyle" 1684959358 9173 8c3d79a79574461e8edd5c56fea751db ""
-  "out/main.aux" 1685736244 12638 d077498300fe9cff8b57754bf4e0e19e "pdflatex"
-  "out/main.bbl" 1685735869 2273 bdc75c2af14f75fd40b88178262346c7 "bibtex out/main"
-  "out/main.out" 1685736244 6265 770d96b4d0562d58df1812f499edd6c0 "pdflatex"
+  "out/main.aux" 1687407364 12638 b3b1326b84bd79a995ebfa3aa607442a "pdflatex"
+  "out/main.bbl" 1687407356 2273 bdc75c2af14f75fd40b88178262346c7 "bibtex out/main"
+  "out/main.out" 1687407364 6265 770d96b4d0562d58df1812f499edd6c0 "pdflatex"
   "preamble.tex" 1683723249 4230 3b62b55eefd76669b6a9ae4bea3a90c9 ""
   (generated)
-  "out/main.log"
-  "out/main.out"
-  "out/main.pdf"
   "out/main.aux"
+  "out/main.log"
+  "out/main.pdf"
+  "out/main.out"
