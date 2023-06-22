@@ -2033,6 +2033,12 @@ INPUT ./figures/power_polar_spline_but_no_physics.pdf
 INPUT figures/power_polar_spline_but_no_physics.pdf
 INPUT ./figures/power_polar_spline_but_no_physics.pdf
 INPUT ./figures/power_polar_spline_but_no_physics.pdf
+INPUT c:/texlive/2021/texmf-dist/fonts/vf/public/newtx/ntxmi7.vf
+INPUT c:/texlive/2021/texmf-dist/fonts/tfm/public/newtx/NewTXMI7.tfm
+INPUT c:/texlive/2021/texmf-dist/fonts/tfm/public/newtx/stxscr.tfm
+INPUT c:/texlive/2021/texmf-dist/fonts/vf/public/newtx/ntx-Regular-tlf-ot1.vf
+INPUT c:/texlive/2021/texmf-dist/fonts/tfm/public/newtx/txmiaX.tfm
+INPUT c:/texlive/2021/texmf-dist/fonts/tfm/public/newtx/ntx-Regular-tlf-ot1r.tfm
 INPUT ./figures/power_curve_with_physics.pdf
 INPUT figures/power_curve_with_physics.pdf
 INPUT ./figures/power_curve_with_physics.pdf
@@ -2046,6 +2052,9 @@ INPUT c:/texlive/2021/texmf-dist/tex/latex/newtx/t1ntxtt.fd
 INPUT c:/texlive/2021/texmf-dist/tex/latex/newtx/t1ntxtt.fd
 INPUT c:/texlive/2021/texmf-dist/tex/latex/newtx/t1ntxtt.fd
 INPUT c:/texlive/2021/texmf-dist/fonts/tfm/public/txfonts/t1xtt.tfm
+INPUT c:/texlive/2021/texmf-dist/fonts/vf/public/newtx/ntxsy7.vf
+INPUT c:/texlive/2021/texmf-dist/fonts/tfm/public/newtx/txsys.tfm
+INPUT c:/texlive/2021/texmf-dist/fonts/tfm/public/newtx/txex-bar.tfm
 INPUT ./assets/seaway_mini_packet_Page_1.png
 INPUT assets/seaway_mini_packet_Page_1.png
 INPUT ./assets/seaway_mini_packet_Page_1.png

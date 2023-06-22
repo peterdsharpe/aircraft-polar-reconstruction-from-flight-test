@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.7.18)  25 MAY 2023 13:05
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2021.7.18)  2 JUN 2023 16:04
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -2036,14 +2036,14 @@ Package pdftex.def Info: figures/power_polar_spline_but_no_physics.pdf  used on
 File: figures/power_curve_with_physics.pdf Graphic file (type pdf)
 <use figures/power_curve_with_physics.pdf>
 Package pdftex.def Info: figures/power_curve_with_physics.pdf  used on input li
-ne 497.
+ne 496.
 (pdftex.def)             Requested size: 469.75386pt x 252.94438pt.
 <figures/aerodynamic_polar_with_physics.pdf, id=574, 462.52798pt x 346.89601pt>
 
 File: figures/aerodynamic_polar_with_physics.pdf Graphic file (type pdf)
 <use figures/aerodynamic_polar_with_physics.pdf>
 Package pdftex.def Info: figures/aerodynamic_polar_with_physics.pdf  used on in
-put line 506.
+put line 505.
 (pdftex.def)             Requested size: 462.52684pt x 346.89516pt.
 LaTeX Font Info:    Trying to load font information for T1+ntxtt on input line 
 515.
@@ -2059,14 +2059,14 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             See the microtype manual for details.
  [15 <./figures/power_curve_with_physics.pdf>] [16 <./figures/aerodynamic_polar
 _with_physics.pdf>]
-<assets/seaway_mini_packet_Page_1.png, id=678, 614.295pt x 794.97pt>
+[17]
+<assets/seaway_mini_packet_Page_1.png, id=687, 614.295pt x 794.97pt>
 File: assets/seaway_mini_packet_Page_1.png Graphic file (type png)
 <use assets/seaway_mini_packet_Page_1.png>
 Package pdftex.def Info: assets/seaway_mini_packet_Page_1.png  used on input li
-ne 534.
+ne 536.
 (pdftex.def)             Requested size: 469.75502pt x 607.9196pt.
-
-[17 <./assets/seaway_mini_packet_Page_1.png (PNG copy)>]
+ [18 <./assets/seaway_mini_packet_Page_1.png (PNG copy)>]
 \openout4 = `main.pyg'.
 
 
@@ -2127,7 +2127,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             See the microtype manual for details.
 )
 Package hyperref Info: bookmark level for unknown listing defaults to 0 on inpu
-t line 569.
+t line 571.
  (out/main.bbl
 LaTeX Font Info:    Font shape `T1/ntxtlf/m/n' will be
 (Font)              scaled to size 9.0pt on input line 1.
@@ -2140,20 +2140,20 @@ LaTeX Font Info:    Font shape `OT1/ntxtlf/m/n' will be
 LaTeX Font Info:    Font shape `TS1/ntxtlf/m/n' will be
 (Font)              scaled to size 9.0pt on input line 17.
 
-[18]) [19] (out/main.aux)
+[19]) [20] (out/main.aux)
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: 770D96B4D0562D58DF1812F499EDD6C0;6265.
 runsystem(del out\\main.pyg)...executed.
 
  ) 
 Here is how much of TeX's memory you used:
- 40876 strings out of 478542
- 796990 string characters out of 5854396
- 1166340 words of memory out of 5000000
+ 40895 strings out of 478542
+ 797276 string characters out of 5854396
+ 1165369 words of memory out of 5000000
  57623 multiletter control sequences out of 15000+600000
- 502624 words of font info for 272 fonts, out of 8000000 for 9000
+ 505586 words of font info for 284 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 99i,15n,131p,979b,965s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 99i,15n,131p,1401b,965s stack positions out of 5000i,500n,10000p,200000b,80000s
 {c:/texlive/2021/texmf-dist/fonts/enc/dvips/tex-gyre/q-ts1.enc}{c:/texlive/20
 21/texmf-dist/fonts/enc/dvips/newtx/ntx-ec-tlf.enc}{c:/texlive/2021/texmf-dist/
 fonts/enc/dvips/newtx/ntx-ot1-tlf.enc}<c:/texlive/2021/texmf-dist/fonts/type1/p
@@ -2168,10 +2168,10 @@ e/2021/texmf-dist/fonts/type1/public/newtx/txsys.pfb><c:/texlive/2021/texmf-dis
 t/fonts/type1/public/newtx/ztmb.pfb><c:/texlive/2021/texmf-dist/fonts/type1/pub
 lic/newtx/ztmbi.pfb><c:/texlive/2021/texmf-dist/fonts/type1/public/newtx/ztmr.p
 fb><c:/texlive/2021/texmf-dist/fonts/type1/public/newtx/ztmri.pfb>
-Output written on out/main.pdf (19 pages, 9130929 bytes).
+Output written on out/main.pdf (20 pages, 9134475 bytes).
 PDF statistics:
- 790 PDF objects out of 1000 (max. 8388607)
- 394 compressed objects within 4 object streams
- 86 named destinations out of 1000 (max. 500000)
- 74525 words of extra memory for PDF output out of 89155 (max. 10000000)
+ 800 PDF objects out of 1000 (max. 8388607)
+ 402 compressed objects within 5 object streams
+ 87 named destinations out of 1000 (max. 500000)
+ 78621 words of extra memory for PDF output out of 89155 (max. 10000000)
 
