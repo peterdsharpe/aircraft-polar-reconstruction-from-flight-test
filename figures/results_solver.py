@@ -74,7 +74,7 @@ def get_results(bootstrap_resample=False):
 
     mass_total = 9.4
 
-    avionics_power = 5  # opti.variable(init_guess=4, lower_bound=0, upper_bound=20)
+    avionics_power = opti.variable(init_guess=4, lower_bound=0, upper_bound=500)
 
     mean_current = np.mean(f(current(t)))
     mean_airspeed = np.mean(f(airspeed(t)))
@@ -95,35 +95,37 @@ def get_results(bootstrap_resample=False):
     # prop_efficiency = prop_eff_params["eff"]
 
     ### Model 1
-    prop_eff_params = {
-        "Jc" : opti.variable(
-            init_guess=propto_J.mean(),
-            lower_bound=propto_J.mean() - 3 * propto_J.std(),
-            upper_bound=propto_J.mean() + 3 * propto_J.std()
-        ),
-        "Js" : opti.variable(
-            init_guess=propto_J.std(),
-            lower_bound=propto_J.std() / 20,
-            upper_bound=propto_J.std() * 20
-        ),
-        "max": opti.variable(init_guess=0.8, lower_bound=0, upper_bound=1),
-        "min": opti.variable(init_guess=0.5, lower_bound=0, upper_bound=1),
-    }
-    opti.subject_to(prop_eff_params["max"] > prop_eff_params["min"])
-
-    prop_efficiency = np.blend(
-        (
-                (propto_J - prop_eff_params["Jc"]) / prop_eff_params["Js"]
-        ),
-        prop_eff_params["max"],
-        prop_eff_params["min"]
-    )
+    # prop_eff_params = {
+    #     "Jc" : opti.variable(
+    #         init_guess=propto_J.mean(),
+    #         lower_bound=propto_J.mean() - 3 * propto_J.std(),
+    #         upper_bound=propto_J.mean() + 3 * propto_J.std()
+    #     ),
+    #     "Js" : opti.variable(
+    #         init_guess=propto_J.std(),
+    #         lower_bound=propto_J.std() / 20,
+    #         upper_bound=propto_J.std() * 20
+    #     ),
+    #     "max": opti.variable(init_guess=0.8, lower_bound=0, upper_bound=1),
+    #     "min": opti.variable(init_guess=0.5, lower_bound=0, upper_bound=1),
+    # }
+    # opti.subject_to(prop_eff_params["max"] > prop_eff_params["min"])
+    #
+    # prop_efficiency = np.blend(
+    #     (
+    #             (propto_J - prop_eff_params["Jc"]) / prop_eff_params["Js"]
+    #     ),
+    #     prop_eff_params["max"],
+    #     prop_eff_params["min"]
+    # )
 
     ### Model 2
+    # rng = np.random.default_rng()
+    #
     # prop_eff_params = {
     #     "scale"        : opti.variable(init_guess=1, lower_bound=0, upper_bound=1),
-    #     "J_pitch_speed": opti.variable(init_guess=2, lower_bound=0),
-    #     "sharpness"    : opti.variable(init_guess=10, lower_bound=2, upper_bound=50),
+    #     "J_pitch_speed": opti.variable(init_guess=rng.normal(2, 1), lower_bound=0),
+    #     "sharpness"    : opti.variable(init_guess=rng.normal(10, 3), lower_bound=2, upper_bound=50),
     # }
     #
     # prop_efficiency = np.softmax(
@@ -134,6 +136,24 @@ def get_results(bootstrap_resample=False):
     #         -1,
     #     softness=0.1
     # )
+
+    ### Model 3
+    prop_eff_params = {
+        "scale"           : opti.variable(init_guess=0.7, lower_bound=0, upper_bound=1),
+        "J_eff_max"         : opti.variable(init_guess=1, lower_bound=0),
+        "J_pitch_speed": opti.variable(init_guess=2, upper_bound=10),
+        "softness"        : opti.variable(init_guess=0.3, lower_bound=0.1),
+    }
+
+    prop_efficiency = prop_eff_params["scale"] * np.softmin(
+        propto_J / prop_eff_params["J_eff_max"],
+        (propto_J - prop_eff_params["J_pitch_speed"]) / (prop_eff_params["J_eff_max"] - prop_eff_params["J_pitch_speed"]),
+        softness=prop_eff_params["softness"]
+    )
+
+    opti.subject_to(prop_eff_params["J_pitch_speed"] > prop_eff_params["J_eff_max"])
+
+    ### End Prop Eff Models
 
     propulsion_air_power = prop_efficiency * (f(voltage(t)) * f(current(t)) - avionics_power)
 
@@ -182,14 +202,19 @@ def get_results(bootstrap_resample=False):
 
     ##### Solve
 
-    sol = opti.solve(
-        verbose=False
-    )
+    try:
+        sol = opti.solve(
+            verbose=False
+        )
+    except RuntimeError:
+        return None
 
     ##### Post-Process, Print
     # print("\nMean Absolute Error:", np.mean(np.abs(sol(residuals))), "W")
     CD_params = sol(CD_params)
     prop_eff_params = sol(prop_eff_params)
+    propulsion_air_power = sol(propulsion_air_power)
+    avionics_power = sol(avionics_power)
 
     for k, v in CD_params.items():
         CD_params[k] = np.maximum(0, v)
@@ -218,24 +243,34 @@ def get_results(bootstrap_resample=False):
         )
 
     def steady_state_prop_efficiency(propto_J):
+        ### Model 0
         # return prop_eff_params["eff"] * np.ones_like(propto_J)
 
-        return np.blend(
-            (
-                    (propto_J - prop_eff_params["Jc"]) / prop_eff_params["Js"]
-            ),
-            prop_eff_params["max"],
-            prop_eff_params["min"]
-        )
+        ### Model 1
+        # return np.blend(
+        #     (
+        #             (propto_J - prop_eff_params["Jc"]) / prop_eff_params["Js"]
+        #     ),
+        #     prop_eff_params["max"],
+        #     prop_eff_params["min"]
+        # )
 
+        ### Model 2
         # return np.softmax(
         #     prop_eff_params["scale"] * (
         #             (propto_J / prop_eff_params["J_pitch_speed"]) -
         #             (propto_J / prop_eff_params["J_pitch_speed"]) ** prop_eff_params["sharpness"]
         #     ),
-        #     -1,
+        #     -0.5,
         #     softness=0.1
         # )
+
+        ### Model 3
+        return prop_eff_params["scale"] * np.softmin(
+            propto_J / prop_eff_params["J_eff_max"],
+            (propto_J - prop_eff_params["J_pitch_speed"]) / (prop_eff_params["J_eff_max"] - prop_eff_params["J_pitch_speed"]),
+            softness=prop_eff_params["softness"]
+        )
 
     def steady_state_required_electrical_power(airspeed):
         q = 0.5 * 1.225 * airspeed ** 2

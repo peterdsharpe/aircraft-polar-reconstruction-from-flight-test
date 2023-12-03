@@ -3,18 +3,24 @@ from results_solver import get_results
 
 b = get_results(bootstrap_resample=False)
 
-bootstrap = [
-    get_results(bootstrap_resample=True)
-    for _ in tqdm(range(2000))
-]
+bootstrap = []
+N_runs = 3000
+counter = tqdm(range(N_runs))
+while len(bootstrap) < N_runs:
+    run = get_results(bootstrap_resample=True)
+    if run is not None:
+        bootstrap.append(run)
+        counter.update()
+    else:
+        print("Invalid run! Trying again...")
 
 ########## Plot Energy Polar
-fig, ax = plt.subplots(figsize=(6.5, 3.5))
+fig, ax = plt.subplots(figsize=(7, 4))
 
 
 def jitter(data):
     iqr = np.percentile(data, 75) - np.percentile(data, 25)
-    return data + np.random.uniform(-1, 1, len(data)) * iqr * 0.02
+    return data + np.random.uniform(-1, 1, len(data)) * iqr * 0.04
 
 
 ##### Plot data
@@ -110,13 +116,13 @@ plt.legend(
 )
 p.show_plot(
     xlabel="Airspeed [m/s]",
-    ylabel="Electrical Power Consumed [W]",
+    ylabel="Electrical\nPower Consumed\n[Watts]",
     legend=False,
-    savefig="power_curve_with_physics.pdf"
+    savefig=["power_curve_with_physics.pdf", "power_curve_with_physics.png"]
 )
 
 ########## Plot L/D Polar
-fig, ax = plt.subplots()
+fig, ax = plt.subplots(figsize=(7, 4))
 
 ##### Plot data
 QS_plot = (0.5 * 1.225 * airspeed_data ** 2) * b["S"]
@@ -129,7 +135,7 @@ plt.plot(
     jitter(CL_plot),
     ".",
     color="k",
-    alpha=(1 - (1 - 0.5) ** (1 / (len(airspeed_data) / 500))),
+    alpha=(1 - (1 - 0.5) ** (1 / (len(airspeed_data) / 250))),
     markersize=3,
 )
 plt.plot(
@@ -163,44 +169,50 @@ p.show_plot(
     # "Solar Seaplane Aerodynamic Polar",
     "",
     "Drag Coefficient $C_D$",
-    "Lift Coefficient $C_L$",
+    "Lift\nCoefficient\n$C_L$",
     legend=False,
-    savefig="aerodynamic_polar_with_physics.pdf"
+    savefig=["aerodynamic_polar_with_physics.pdf", "aerodynamic_polar_with_physics.png"]
 )
-#
-# ########## Plot Propeller Efficiency Polar
-# fig, ax = plt.subplots()
-#
-# ##### Plot data
-# mask = f(current(t)) > 1
-#
-# prop_efficiency_plot = (
-#                                propulsion_air_power - residuals
-#                        ) / (f(voltage(t)) * f(current(t)) - avionics_power)
-#
-# plt.plot(
-#     jitter(propto_J[mask]),
-#     jitter(prop_efficiency_plot[mask]),
-#     ".",
-#     color="k",
-#     alpha=(1 - (1 - 0.5) ** (1 / (len(t) / 500))),
-#     markersize=3,
-# )
-# plt.plot(
-#     [],
-#     [],
-#     ".k",
-#     markersize=3,
-#     label="Flight Data, with total-energy\ncorrections, powertrain eff.",
-# )
-#
-# ##### Plot fit
-# propto_J_plot = np.linspace(
-#     0, propto_J[mask].max(), 1000
-# )
-#
-# prop_efficiency_plot = steady_state_prop_efficiency(propto_J_plot)
-#
+
+########## Plot Propeller Efficiency Polar
+fig, ax = plt.subplots(figsize=(7, 4))
+
+##### Plot data
+mask = b["f"](b["current"](b["t"])) > 1
+
+prop_efficiency_plot = (
+                               b["propulsion_air_power"] - residuals
+                       ) / (b["f"](b["voltage"](b["t"])) * b["f"](b["current"](b["t"])) - b["avionics_power"])
+
+plt.plot(
+    jitter(b["propto_J"][mask]),
+    jitter(prop_efficiency_plot[mask]),
+    ".",
+    color="k",
+    alpha=(1 - (1 - 0.5) ** (1 / (len(b["t"]) / 250))),
+    markersize=3,
+)
+plt.plot(
+    [],
+    [],
+    ".k",
+    markersize=3,
+    label="Corrected Data",
+)
+
+##### Plot fit
+propto_J_plot = np.linspace(
+    0, b["propto_J"][mask].max(), 1000
+)
+
+# prop_efficiency_plot = b["steady_state_prop_efficiency"](propto_J_plot)
+prop_efficiency_plot = [
+    r["steady_state_prop_efficiency"](propto_J_plot)
+    for r in bootstrap
+]
+
+plot_with_bootstrapped_uncertainty(propto_J_plot, prop_efficiency_plot)
+
 # _line, = plt.plot(
 #     propto_J_plot,
 #     prop_efficiency_plot,
@@ -210,22 +222,26 @@ p.show_plot(
 #     zorder=4,
 #     label="Model Fit (physics-informed; $L_1$ norm)",
 # )
+
+# plt.xlim(0, b["propto_J"][mask].max())
+plt.xlim(0, 1.8)
+plt.ylim(bottom=0, top=1)
 #
-# plt.xlim(0, propto_J[mask].max())
-# plt.ylim(bottom=0)
-# #
-# p.set_ticks(0.5, 0.1, 0.2, 0.05)
-#
-# from matplotlib import ticker
-#
-# ax.yaxis.set_major_formatter(ticker.PercentFormatter(1.0, decimals=0))
-#
-# plt.legend(
-#     # loc="lower right",
-# )
-# p.show_plot(
-#     "Solar Seaplane Propulsion Polar",
-#     "$V\\ /\\ (\\rm current)^{1/3}$, proportional to advance ratio $J$",
-#     "Propulsive Efficiency $\\eta_p$",
-#     legend=False
-# )
+p.set_ticks(0.5, 0.1, 0.2, 0.05)
+
+from matplotlib import ticker
+
+ax.yaxis.set_major_formatter(ticker.PercentFormatter(1.0, decimals=0))
+
+plt.legend(
+    # loc="lower right",
+)
+p.show_plot(
+    # "Solar Seaplane Propulsion Polar",
+    "",
+    r"$\frac{\rm Airspeed\ [m/s]}{(\rm Current\ [Amps])^{1/3}}$, proportional to advance ratio $J$",
+    # "$V\\ /\\ (\\rm current)^{1/3}$, proportional to advance ratio $J$",
+    "Propulsive\nEfficiency $\\eta_p$",
+    legend=False,
+    savefig=["propeller_polar_with_physics.pdf", "propeller_polar_with_physics.png"]
+)

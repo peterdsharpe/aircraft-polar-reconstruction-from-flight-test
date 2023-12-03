@@ -7,7 +7,7 @@ _, current = simple_read("current")
 
 from aerosandbox.tools.statistics import time_series_uncertainty_quantification as tsuq
 
-fig, ax = plt.subplots(figsize=(6.5,3.5))
+fig, ax = plt.subplots(figsize=(7,4))
 
 x = airspeed
 y = voltage * current
@@ -66,7 +66,7 @@ plt.legend(
 )
 p.show_plot(
     xlabel="Airspeed [m/s]",
-    ylabel="Electrical Power Consumed [W]",
+    ylabel="Electrical\nPower Consumed\n[Watts]",
     # title="Raw Data",
     legend=False,
     # dpi=300
