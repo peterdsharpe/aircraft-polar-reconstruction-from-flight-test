@@ -11,8 +11,6 @@
 
 \begin{document}
 
-    \bibliographystyle{plain}
-
     \maketitle
 
     \begin{abstract}
@@ -70,7 +68,7 @@
 
     More extreme strategies have also been implemented to measure the aerodynamic performance curve. For example, the glide ratio of the P-51 fighter aircraft was allegedly measured by removing the propeller, towing it aloft, and gliding it down. Note that estimation of the entire aerodynamic polar would require \textit{multiple} of such experiments, each flown at different airspeeds. This removes the error associated with estimating propeller windmilling drag, but this is obviously an onerous, expensive, and potentially less-safe procedure to include in a flight test campaign.
 
-    Full-scale wind tunnel testing is another possible method for estimating the aerodynamic polar of the as-built aircraft, although this is similarly expensive and time-consuming, rendering it infeasible for most aircraft development programs. Scale models in wind tunnels as well as CFD simulation can also provide useful aerodynamic estimates, but these results can differ significantly from the aerodynamics of real as-built aircraft. For example, Hoerner \cite{hoerner_fluid_1965} gives an example of the Bf-109 fighter aircraft, where roughly \textit{half of the drag of the actual built aircraft} is due to components that are typically de-featured in modern computational analysis\footnote{e.g., rivets, sheet metal gaps, aileron gaps \& hinges, engine and radiator thermal effects, antennae, sensors, lights, guns, holes for ventilation and cooling, etc.}. This Bf-109 case is somewhat extreme, but even for modern aircraft, the drag of the as-built aircraft can differ significantly from computational estimates or small-scale wind tunnel testing. This motivates flight-test-based aerodynamic polar characterization.
+    Full-scale wind tunnel testing is another possible method for estimating the aerodynamic polar of the as-built aircraft, although this is similarly expensive and time-consuming, rendering it infeasible for most aircraft development programs. Scale models in wind tunnels as well as CFD simulation can also provide useful aerodynamic estimates, but these results can differ significantly from the aerodynamics of real as-built aircraft. For example, Hoerner \cite{hoerner_fluiddynamic_1965} gives an example of the Bf-109 fighter aircraft, where roughly \textit{half of the drag of the actual built aircraft} is due to components that are typically de-featured in modern computational analysis\footnote{e.g., rivets, sheet metal gaps, aileron gaps \& hinges, engine and radiator thermal effects, antennae, sensors, lights, guns, holes for ventilation and cooling, etc.}. This Bf-109 case is somewhat extreme, but even for modern aircraft, the drag of the as-built aircraft can differ significantly from computational estimates or small-scale wind tunnel testing. This motivates flight-test-based aerodynamic polar characterization.
 
     Similarly, the power curve is often measured by flying in steady level flight for an extended period at a given airspeed, adjusting pitch trim as needed. The input power to the propulsion system $P_{\rm in}$ is measured at a given throttle setting. In a conventionally-fueled airplane, this can be computed using the fuel flow rate at a given throttle setting (read off the panel via a fuel flow meter) and the specific energy of the fuel. For an electric airplane, it can be computed as the product of battery current and voltage, which are readily available. This procedure is then repeated for a variety of airspeeds, and the resulting power curve is plotted.
 
@@ -121,7 +119,7 @@
 
     To illustrate our proposed flight test data analysis procedure, this manuscript will use example data from a flight test conducted during MIT 16.821: Flight Vehicle Development, a senior-level aircraft design/build/fly capstone course at MIT AeroAstro. The flown aircraft, named \emph{Solar Surfer}, is a remote-controlled solar-electric seaplane design with a 14-foot wingspan. The as-flown all-up mass is 9.4 kg.
 
-    General specifications of the aircraft can be found in the early design drawing that is reproduced in Appendix \ref{subsec:solar_surfer_drawing}. While this drawing does not reflect as-built weights or various planform adjustments that were made during preliminary design and construction, the overall configuration and performance numbers are representative of the aircraft that was flown.
+    General specifications of the aircraft can be found in the early design drawing that is reproduced in Appendix \ref{sec:solar_surfer_drawing}. While this drawing does not reflect as-built weights or various planform adjustments that were made during preliminary design and construction, the overall configuration and performance numbers are representative of the aircraft that was flown.
 
     \subsection{Flight Test Campaign}
 
@@ -156,11 +154,9 @@
 
     However, there are two primary problems with the data we have. Firstly, all the data sources, and in particular the airspeed sensor, yield noisy measurements. The unsteady corrections that we will later implement require taking the derivative of this data; this is a problem because taking the derivative of noisy data tends to amplify the noise further.
 
-    Secondly, the total amount of data is extremely limited, both in duration and sample rate. For example, there are only ~1,200 data points \emph{in total} for each of the plotted sensor traces, and this is before eliminating noise. After eliminating noise (which effectively acts as a low-pass filter on our data, as noise tends to be relatively high-frequency), the effective amount of information we have from the sensors is extremely low. While 1,200 data points might be sufficient to characterize the aircraft flight performance at a single operating point (i.e., a single power setting and airspeed), it is typically a vastly insufficient quantity of data to characterize any substantial portion of the flight envelope.
+    Secondly, the total amount of data is extremely limited, both in duration and sample rate. For example, there are only ~1,200 data points \emph{in total} for each of the plotted sensor traces, and this is before eliminating noise. After eliminating noise (which effectively acts as a low-pass filter on our data, as noise tends to be relatively high-frequency), the effective amount of information we have from the sensors is quite limited. While 1,200 data points might be sufficient to characterize the aircraft flight performance at a single operating point (i.e., a single power setting and airspeed), it is typically a vastly insufficient quantity of data to characterize any substantial portion of the flight envelope.
 
-    Consider that even the most sophisticated techniques for system identification via statistical inference require the system to be observable in some form - no amount of math can recover a signal that is simply not present in the data. This is difficult, because after noise removal, the data really no more than perhaps a half-dozen ``system excitations'' from which we can infer aircraft performance. As a more intuitive analogy, consider that even the world's best test pilot can't accurately characterize the handling qualities of the aircraft without observing at least a few flight maneuvers.
-
-    For these reasons, this dataset makes a good example case for what kinds of flight data reconstruction are possible with very limited, noisy data using statistical inference techniques and corrections from unsteady flight physics.
+    Consider that even the most sophisticated techniques for system identification via statistical inference require the system to be observable in some form - no amount of math can recover a signal that is simply not present in the data. This is difficult, because after noise removal, the data really no more than perhaps a half-dozen ``system excitations'' from which we can infer aircraft performance. For these reasons, this dataset makes a good example case for what kinds of flight data reconstruction are possible with very limited, noisy data using statistical inference techniques and corrections from unsteady flight physics.
 
     \subsection{Naive Estimation of Power Curve}
 
@@ -212,7 +208,7 @@
         \item The noise in each sample is independent (i.e., uncorrelated with previous samples) and normally-distributed
         \item The noise is unbiased (i.e., there are no systematic errors in the data, only random ones)
         \item The noise is homoscedastic (i.e., the standard deviation of the noise is constant across the entire dataset)
-        \item The sample rate is significantly higher than the underlying dynamics of the system that we're aiming to recover (i.e., the system is ``slow'' relative to the sample rate).
+        \item The sample rate is significantly higher than the underlying dynamics of the system that we're aiming to recover (i.e., the system is ``slow'' relative to the sample rate), with this assumption quantified later in the present work.
     \end{itemize}
 
     Under these assumptions above, the probabilistic properties of the noise reduce to a single parameter: the variance of the noise $\sigma^2_n$. Thus, by constructing an estimator for this statistic, we can recover the probability distribution of the noise and hence an optimal estimator of the data.
@@ -231,19 +227,22 @@
 
     One way to do this is by assuming that the data is ``slow'' relative to the sample rate. If this is true, then subsequent samples will effectively have the same underlying truth value, but with noise drawn independently from the same underlying distribution.
 
-    Quantitatively, if our true data is $x(t)$, and the noise of the sample $n(t)$ is drawn from $\mathcal{N}(0, \sigma^2_n)$, then our observed sensor data $s(t)$ will be:
+    Quantitatively, consider a scenario where the true data is $x(t)$, and the noise of the sample $n(t)$ is drawn from $\mathcal{N}(0, \sigma^2_n)$, with initially-unknown $\sigma_n$. Then our observed sensor data $s(t)$ can be written as:
 
-    $$s(t_1) = x(t_1) + n(t_1)$$
+    $$s(t) = x(t) + n(t)$$
 
-    $$s(t_2) = x(t_2) + n(t_2)$$
+    \noindent For two subsequent discrete samples at nearby times $t_1$ and $t_2$, we can say:
 
-    \noindent If $t_1 \approx t_2$ (as would be the case if we're looking at subsequent samples), then $x(t_1) \approx x(t_2)$, and hence:
+    \begin{align*}
+        s(t_1) = x(t_1) + n(t_1) &&
+        s(t_2) = x(t_2) + n(t_2)
+    \end{align*}
+
+    \noindent If $t_1 \approx t_2$ (as would be the case for subsequent samples), then $x(t_1) \approx x(t_2)$, contingent on the sample rate greatly exceeding the effective fastest frequency of the true signal. Hence:
 
     $$s(t_2) - s(t_1) \approx n(t_2) - n(t_1)$$
 
-    In other words, the difference of two subsequent observed samples will be approximately equal to the difference of two independent draws from the same noise distribution. This means that we can estimate the variance of the noise by looking at the variance of the differences between subsequent samples.
-
-    From the properties of the difference of two independent random normal variables, we can then say:
+    In other words, the difference of two subsequent observed samples will be approximately equal to the difference of two independent draws from the same noise distribution. This means that we can estimate the variance of the noise by looking at the variance of the differences between subsequent samples. From the properties of the difference of two independent random normal variables, we can then say:
 
     $$n(t_2) - n(t_1) \sim \mathcal{N}(0, 2\sigma^2_n)$$
 
@@ -317,7 +316,7 @@
         ^2 + {d \choose 1}^2 + \dots + {d \choose d}^2 = {2 d \choose d} = \frac{(2d)!}{(d!)^2}
     \end{equation}
 
-    to derive the following $d$-th order estimator of the noise variance:
+    \noindent to derive the following $d$-th order estimator of the noise variance:
 
     \begin{equation}
         \sigma^2 =
@@ -333,6 +332,8 @@
         \label{eq:arbitrary_order_noise_estimator}
     \end{equation}
 
+    An example stable numerical implementation of this estimator is given in Appendix \ref{sec:estimator_code_example}.
+
     While we have shown that the second-order estimator has improved robustness to low sample rates, it is not immediately clear that this will hold for arbitrary orders - as the order increases, we might expect to see some form of numerical instability as we take successively higher-order derivatives of noisy data. To test this, we can plot the performance of noise estimators of various orders, as shown in Figure \ref{fig:noise_variance_higher_order}.
 
     \begin{figure}[!htb]
@@ -345,7 +346,7 @@
 
     The figure above shows something quite remarkable: we can use extremely-high-order estimators (even up to the 512th order, i.e., taking the 512th-derivative of raw, noisy data via finite differences), and we see not only that it's numerically stable, but also that it accurately estimates the true noise variance even when the underlying signal is almost at the Nyquist frequency.
 
-    Interestingly, except for a miniscule region near the Nyquist frequency, estimator performance seems to monotonically improve with increasing estimator order. Since practical data reconstruction would likely have the $f_{\rm sample} / f_{\rm signal}$ ratio be much larger than 2, this suggests that we can use extremely-high-order estimators to estimate the noise variance with very high accuracy.
+    Interestingly, except for a miniscule region near the Nyquist frequency, estimator performance seems to monotonically improve with increasing estimator order. Since practical data reconstruction would likely have the $f_{\rm sample} / f_{\rm signal}$ ratio be much larger than 2, this suggests that one can use extremely-high-order estimators to estimate the noise variance with very high accuracy.
 
     \subsection{Uncertainty Quantification Using Noise Variance Estimators}
 
@@ -538,10 +539,10 @@
 
     \newpage
 
-    \section*{Appendix}
+    \section{Appendix}
 
     \subsection{Solar Surfer Design Drawing}
-    \label{subsec:solar_surfer_drawing}
+    \label{sec:solar_surfer_drawing}
 
     \begin{figure}[H]
         \centering
@@ -552,32 +553,37 @@
     \newpage
 
     \subsection{Efficient Computational Implementation of Arbitrary-Order Noise Estimator}
+    \label{sec:estimator_code_example}
 
     While the given equation for an arbitrary-order data-driven noise estimator (Equation \ref{eq:arbitrary_order_noise_estimator}) is mathematically correct, it is nontrivial to computationally implement. This is because an implementation as-written involves combinatorial coefficients that grow exponentially with the order of the estimator, quickly exceeding standard double-precision floating-point overflow. A naive implementation also has a runtime complexity that scales linearly with both with the number of samples in the dataset and the order of the estimator, making it computationally unattractive for large datasets or high-order estimators.
 
-    An efficient computational implementation of the arbitrary-order noise estimator is given below. This example uses NumPy and SciPy within Python 3. This implementation uses the log-gamma function to both nullify the complexity scaling with respect to estimator order as well as prevent numerical overflow. The implementation also uses a convolutional kernel to vectorize the summation, enabling further speedups.
+    An efficient computational implementation of the arbitrary-order noise estimator is given below. This example is based on syntax for NumPy 1.24.3 and SciPy 1.11.1 within Python 3. This implementation uses the log-gamma function, which is much faster for high-order estimators and delays numerical overflow until much higher orders. The implementation also uses a convolutional kernel to vectorize the summation, enabling further speedups.
 
     \begin{listing}[H]
         \begin{minted}[mathescape=true]{python}
 import numpy as np
 from scipy.special import gammaln
 
-def estimate_noise_standard_deviation(
-        data: np.ndarray,
-        estimator_order: int = 10,
-) -> float:
-    ### For speed, pre-compute the log-factorial of integers from 0 to estimator_order
-    ln_factorial = lambda x: gammaln(x + 1)
-    ln_f = ln_factorial(np.arange(estimator_order + 1))
+ln_factorial = lambda x: gammaln(x + 1)  # Returns $\ln(x!)$
 
-    ### Create a convolutional kernel to vectorize the summation
-    coefficients = np.exp(
+def estimate_noise_standard_deviation(data: np.ndarray, estimator_order: int = 10) -> float:
+    """
+    Estimates the standard deviation of noise in a time-series data set.
+
+    Args:
+        data: A 1D NumPy array of time-series data, assumed to consist of signal + noise.
+        estimator_order: The order of the estimator to use. A positive integer.
+
+    Returns: The estimated standard deviation of the noise in the data.
+    """
+    ln_f = ln_factorial(np.arange(estimator_order + 1))  # For speed, cache $\ln(x!)$ for $x \in [$0, estimator_order$]$
+    coefficients = np.exp(  # Create a convolutional kernel to vectorize the summation
         2 * ln_f[estimator_order] - ln_f - ln_f[::-1] - 0.5 * ln_factorial(2 * estimator_order)
     ) * (-1) ** np.arange(estimator_order + 1)
-    coefficients -= np.mean(coefficients) # Remove any bias introduced by floating-point error
+    coefficients -= np.mean(coefficients)  # Remove any bias introduced by floating-point error
+    sample_stdev = np.convolve(data, coefficients[::-1], 'valid')  # Convolve the data with the kernel
+    return np.mean(sample_stdev ** 2) ** 0.5  # Return the standard deviation of the result
 
-    sample_stdev = np.convolve(data, coefficients[::-1], 'valid')
-    return np.mean(sample_stdev ** 2) ** 0.5
 
         \end{minted}
         \caption{Example efficient implementation of the arbitrary-order noise estimator using NumPy/SciPy in Python 3.}
@@ -587,6 +593,6 @@ def estimate_noise_standard_deviation(
     \section*{Acknowledgments}
     The authors would like to thank the MIT AeroAstro 16.821 course staff for their support of this work, and the MIT AeroAstro department for their support of the course. The aircraft used to collect the example data in this work was constructed by the MIT AeroAstro 16.821 student team, and the authors would like to thank the team for their hard work and dedication to the project.
 
-    \bibliography{main}
+    \bibliography{main, C:/Users/peter/Documents/Zotero/library, C:/Users/peter/Documents/Zotero/library-zotero}
 
 \end{document}
