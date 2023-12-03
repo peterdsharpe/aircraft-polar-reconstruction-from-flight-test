@@ -345,7 +345,7 @@
     \begin{figure}[!htb]
         \centering
         \ifdraft{}{\includegraphics[]{figures/power_polar_spline_but_no_physics}}
-        \caption{Raw uncorrected data for the power curve, with noise-variance-aware spline interpolation. A resampling bootstrap allows uncertainty quantification.}
+        \caption{Raw uncorrected data for the power curve, with noise-variance-aware spline interpolation. A resampling bootstrap allows uncertainty quantification. However, the lack of physics-based model structure still leads to the recovery of a physically-implausible result.}
         \label{fig:power_curve_spline_but_no_physics}
     \end{figure}
 
@@ -524,16 +524,18 @@
     A fair point of hesitancy here might be the fact that applying these corrections to recover useful insights from noisy, limited, unsteady data takes a significant amount of algorithmic development and mathematical complexity. However, algorithms are cheap, and more importantly, \emph{scalable} - so, once a computational workflow is established, it can easily be applied to a large number of flight test campaigns. By contrast, flight-test hours and improved instrumentation represent a recurring high cost. Therefore, it is worth investing in the development of algorithms that can extract the maximum amount of useful insight from the data that we do collect, even if this analysis is less simple.
 
 
-    \section*{Appendix}
+
 
     \newpage
+
+    \section*{Appendix}
 
     \subsection{Solar Surfer Design Drawing}
     \label{subsec:solar_surfer_drawing}
 
     \begin{figure}[H]
         \centering
-        \ifdraft{}{\includegraphics[width=\textwidth]{assets/seaway_mini_packet_Page_1}}
+        \ifdraft{}{\includegraphics[page=1, width=\textwidth]{assets/seaway_mini_packet.pdf}}
         \label{fig:solar_surfer_design}
     \end{figure}
 
