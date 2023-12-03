@@ -17,7 +17,9 @@
 
     \begin{abstract}
 
-        This work presents a rigorous statistical method for estimating an aircraft's aerodynamic and propulsive performance characteristics from minimal flight data. The method is based on a physics-informed regression approach, which uses a physics-based model of the aircraft's dynamics to constrain the regression problem. The method is demonstrated on a flight test dataset collected from a small electric aircraft. The results show that the method is able to estimate the aircraft's aerodynamic and propulsive performance characteristics with reasonable accuracy, and that the method is able to estimate the uncertainty in these estimates. The method is also shown to be robust to sensor noise and to missing data. Finally, the method is shown to be able to estimate the aircraft's performance characteristics from a single flight, which is a significant improvement over traditional methods.
+        This work presents a system-identification-like process for estimating an aircraft's aerodynamic and propulsive performance characteristics from minimal flight data. The method is based on a physics-informed regression approach, which uses an unsteady physics model of the aircraft's dynamics to constrain the regression problem. The method is demonstrated on a flight test dataset collected from a small electric aircraft. The results show that the method is able to estimate the aircraft's power curve, aerodynamic polar, and propulsive efficiency curve with surprisingly high accuracy given limited data. The method is able to estimate the uncertainty in these estimates.
+
+        Another contribution is a new method for estimating the statistical properties of a signal's noise component from the signal itself. Among other assumptions, this method relies on assuming that the true signal and the noise are spectrally-separated. Noise is isolated by repeated numerical differentiation, which is shown to be stable in numerical experiment. An example implementation of this noise variance estimator is given and shown to be convergent to the true noise variance in numerical experiment. Higher-order implementations of this estimator are also presented and shown to isolate the noise accurately even when the underlying true signal is quite close to the Nyquist frequency.
 
     \end{abstract}
 
@@ -44,12 +46,12 @@
 
     \section{Introduction}
 
-    A primary goal of an initial flight test campaign of a new aircraft is to experimentally determine the aircraft's aerodynamic and propulsive performance characteristics. The desired outputs of this process typically include:
+    A primary goal of a new aircraft's initial flight test campaign is to experimentally determine the aircraft's aerodynamic and propulsive performance characteristics. The desired outputs of this process typically include:
 
     \begin{enumerate}
         \item The aircraft's power curve, which gives the required power to maintain level flight as a function of airspeed.
-        \item The aircraft's aerodynamic polar, which gives the relationship between the aircraft's lift and drag coefficients.
-        \item The aircraft's propulsive efficiency curve, which yields the overall propulsive efficiency, typically as a function of throttle setting and/or propeller advance ratio, if relevant.
+        \item The aircraft's $C_L$-$C_D$ aerodynamic polar (referred to throughout this work as simply the \textit{aerodynamic polar}). This gives the relationship between the aircraft's lift and drag coefficients as angle of attack is varied, representing the locus of possible aerodynamic operating points.
+        \item The aircraft's propulsive efficiency curve, which yields the overall propulsive efficiency, typically as a function of throttle setting and/or propeller advance ratio (if relevant).
     \end{enumerate}
 
     All three of these results represent sweeps through the aircraft's flight envelope, varying the aircraft's airspeed, pitch trim setting, and throttle setting, and measuring the resulting lift, drag, and power required.
@@ -58,13 +60,19 @@
 
     Typically, these performance outputs are obtained by performing an extensive campaign of careful, controlled flight experiments at quasi-steady flight conditions.
 
-    For example, the aerodynamic polar is commonly measured by performing a series of long, steady power-off glides at different airspeeds. An implicit assumption here is that pitch trim is adjusted to maintain these airspeeds. Windmilling drag can also be estimated and calibrated out for improved accuracy, although this introduces additional uncertainty. The glide ratio (or equivalently, $L/D$) is then measured at a given airspeed by using a simple two-point finite-difference between the beginning and end of the glide:
+    For example, the aerodynamic polar is commonly measured by performing a series of long, steady power-off glides at different airspeeds, thus isolating the effect of propulsive power. (If the aircraft is propeller-driven, propeller windmilling drag can also be estimated and calibrated out for improved accuracy, although this introduces significant additional uncertainty.) An implicit assumption here is that pitch trim is adjusted to maintain these airspeeds. The glide ratio (or equivalently, $L/D$) is then measured at a given airspeed by using a simple two-point finite-difference between the beginning and end of the glide:
 
     $$(L/D) = \frac{h(t_1) - h(t_2)}{V \cdot (t_2 - t_1)}$$
 
-    where $h(t)$ represents the altitude at time $t$, and $V$ represents the airspeed. The drag is then computed as $D = W / (L/D)$, and $C_L$ and $C_D$ can be nondimensionalized from here.
+    where $h(t)$ represents the altitude at time $t$, $V$ represents the airspeed, and $t_1$ and $t_2$ are the beginning- and end-times of the glide. The drag is then computed as $D = W / (L/D)$, and $C_L$ and $C_D$ can be nondimensionalized from here.
 
-    Similarly, the power curve is often measured by flying in steady level flight for an extended period at a given airspeed, adjusting pitch trim as needed. The input power to the propulsion system $P_{\rm in}$ is measured at a given throttle setting. In a liquid-fueled airplane, this can be computed using the fuel flow rate at a given throttle setting (read off the panel via a fuel flow meter) and the specific energy of the fuel. For an electric airplane, it can be computed as the product of battery current and voltage. This procedure is then repeated for a variety of airspeeds, and the resulting power curve is plotted.
+    For aerodynamically-efficient aircraft with high $L/D$ ratios (such as sailplanes), another common strategy for estimating aerodynamic polars during flight testing is to fly these power-off glides along with a wingman aircraft. This wingman aircraft flies the same power-off glide as the test aircraft, at the same airspeed, with the same starting altitude, and in the same vicinity. The wingman aircraft is assumed to have a known aerodynamic polar, and hence the difference in altitude between the two aircraft at the end of a glide segment can be used to estimate the test aircraft's aerodynamic polar. This approach calibrates out the effect of local airmass motion (e.g., thermals) on the measured glide ratio, which can be significant for aerodynamically-efficient aircraft.
+
+    More extreme strategies have also been implemented to measure the aerodynamic performance curve. For example, the glide ratio of the P-51 fighter aircraft was allegedly measured by removing the propeller, towing it aloft, and gliding it down. Note that estimation of the entire aerodynamic polar would require \textit{multiple} of such experiments, each flown at different airspeeds. This removes the error associated with estimating propeller windmilling drag, but this is obviously an onerous, expensive, and potentially less-safe procedure to include in a flight test campaign.
+
+    Full-scale wind tunnel testing is another possible method for estimating the aerodynamic polar of the as-built aircraft, although this is similarly expensive and time-consuming, rendering it infeasible for most aircraft development programs. Scale models in wind tunnels as well as CFD simulation can also provide useful aerodynamic estimates, but these results can differ significantly from the aerodynamics of real as-built aircraft. For example, Hoerner \cite{hoerner_fluid_1965} gives an example of the Bf-109 fighter aircraft, where roughly \textit{half of the drag of the actual built aircraft} is due to components that are typically de-featured in modern computational analysis\footnote{e.g., rivets, sheet metal gaps, aileron gaps \& hinges, engine and radiator thermal effects, antennae, sensors, lights, guns, holes for ventilation and cooling, etc.}. This Bf-109 case is somewhat extreme, but even for modern aircraft, the drag of the as-built aircraft can differ significantly from computational estimates or small-scale wind tunnel testing. This motivates flight-test-based aerodynamic polar characterization.
+
+    Similarly, the power curve is often measured by flying in steady level flight for an extended period at a given airspeed, adjusting pitch trim as needed. The input power to the propulsion system $P_{\rm in}$ is measured at a given throttle setting. In a conventionally-fueled airplane, this can be computed using the fuel flow rate at a given throttle setting (read off the panel via a fuel flow meter) and the specific energy of the fuel. For an electric airplane, it can be computed as the product of battery current and voltage, which are readily available. This procedure is then repeated for a variety of airspeeds, and the resulting power curve is plotted.
 
     The propulsive efficiency can be roughly estimated based on these experiments as well. One possible procedure is as follows:
 
@@ -80,21 +88,21 @@
 
     \end{enumerate}
 
-    Traditional methods for measuring aerodynamic and propulsive performance have several limitations. The biggest limitation by far is that they require vast amounts of flight time to obtain a sufficient number of data points to characterize the aircraft's performance. This is both expensive and time-consuming.
+    These traditional methods for measuring aerodynamic and propulsive performance have several limitations. The biggest limitation by far is that they require vast amounts of flight time to obtain a sufficient number of data points to characterize the aircraft's performance. This is both expensive and time-consuming.
 
-    Furthermore, the aircraft must be flown at precisely-controlled conditions. This can be frustrating and tedious for the pilot, and it can also be dangerous if the aircraft is flown for an extended duration at conditions that are close to the edge of the flight envelope (e.g., behind the power curve on a not-yet-characterized experimental airplane).
+    Furthermore, the aircraft must be flown at precisely-controlled conditions. This can be frustrating and tedious for the pilot to maintain, and it can also be dangerous if the aircraft is flown for an extended duration at conditions that are close to the edge of the flight envelope (e.g., behind the power curve on a not-yet-characterized experimental airplane).
 
-    Traditional methods also make no direct estimate of sensor noise (and hence, uncertainty)—data is collected and averaged until the experimenter is satisfied that the data is ``good enough''. This is a subjective process, and it is difficult to quantify the uncertainty in the resulting performance estimates.
+    Traditional methods also make no direct estimate of sensor noise (and hence, uncertainty) -- data is collected and averaged until the experimenter is satisfied that the data is ``good enough''. This is a subjective process that leaves it difficult to quantify the uncertainty in the resulting performance estimates.
 
-    Finally, traditional methods are not well-suited to estimating the performance of an aircraft that is not in steady flight. For example, data recorded during an aircraft's climb or descent to flight test altitude is typically discarded, which is wasteful; ideally, every single second of data should contribute to refining our estimate of the aircraft's performance.
+    Finally, traditional methods are not well-suited to estimating the performance of an aircraft that is not in steady flight -- in the traditional performance estimation methods described here, only steady data (e.g., a stabilized glide or cruise) can be used. For example, data recorded during an aircraft's climb or descent to flight test altitude is typically discarded, which is wasteful; ideally, every single second of data should contribute to refining our estimate of the aircraft's performance.
 
     \subsection{Inference-Based Flight Data Reconstruction Methods}
 
-    By contrast, we propose a method of estimating these performance characteristics which relies on a different perspective about flight testing. Traditionally, flight testing is viewed as a process of pure measurement, based only on analyzing the data itself. Instead, we view the aircraft flight test as a data-generating process, from which we can infer performance relationships. This might sound like a small difference, but it allows us to recognize that we actually have vastly more information about the aircraft than just the data itself, which in turn allows us to perform much more accurate performance reconstruction with a limited amount of data:
+    By contrast, we propose a method of estimating these performance characteristics which relies on a different perspective about flight testing. Traditionally, flight testing is viewed as a process of pure measurement, based only on analyzing the data itself. Instead, we view the aircraft flight test as a data-generating process, from which we can infer performance relationships. This distinction allows us to recognize that we actually have vastly more information about the aircraft than only the data itself, which in turn allows us to perform much more accurate performance reconstruction with a limited amount of data:
 
     Firstly, with certain reasonable assumptions about the sensor noise characteristics, the data itself can reveal a surprisingly large amount of information about the sensor noise. Essentially, this involves using the data to estimate the ``trustworthiness'' \emph{of the data itself}, a process described more fully in Section \ref{subsec:optimal_sensor_data_reconstruction}. One contribution of this work is a new cross-validation-like approach for estimating the sensor noise using only the properties of the data itself. This allows cleaner raw data inputs to the subsequent performance analysis toolchain that we develop, ultimately resulting in more accurate performance estimates and enabling uncertainty quantification.
 
-    We also know certain characteristics of the aircraft's state based on physics, which can further increase the effective information density and significantly improve state estimation. For example, we know that the true state of the aircraft must follow invariants from Newtonian physics (e.g., conservation of energy). Embedding these invariants from physics reduces the number of unknowns, enabling more robust correction for unsteady effects. This is described in Section \ref{sec:physics_based_corrections}.
+    We also know certain characteristics of the aircraft's performance curve based on first-principles physics, which can further increase the effective information density and our resulting performance estimates. Another way to think about this is that the function space of performance curves (e.g., power curve, aerodynamic polar) is restricted to functions that generally follow first-principles physics, allowing us to reduce uncertainty on these resulting inferred relations. For example, we know that the true state of the aircraft must follow invariants from Newtonian physics (e.g., conservation of energy). Embedding these invariants from physics reduces the number of unknowns, enabling more robust correction for unsteady effects. This is described in Section \ref{sec:physics_based_corrections}.
 
     Finally, there are characteristics about performance relations that we can be embedded from domain-specific expertise. Even for models that do not have simple, closed-form invariants, we almost always have some priors (i.e., informed guesses) about how performance parameters should be related - model structure. For example, we know that the aircraft's drag coefficient will primarily be a function of lift coefficient, and the general shape of this function is known. Similarly, we know that the propulsive efficiency will largely be a function of advance ratio, and the advance ratio can be inferred from the airspeed, input power, and first-order physics. Incorporation of these physics-based performance models embeds our physical understanding of the aircraft system into the estimation process, improving accuracy. For this reason, we term the performance reconstruction methodology described in this work a ``physics-informed'' approach.
 
@@ -107,6 +115,7 @@
         \label{fig:overall_procedure}
     \end{figure}
 
+    The example given in the subsequent sections is for a small electric-driven propeller aircraft, although the methodology is applicable to any aircraft type. Some considerations for applying this methodology to other aircraft types are discussed in Section \ref{sec:conclusion}.
 
     \section{A Minimal Flight Test Dataset}
 
@@ -314,13 +323,13 @@
         \sigma^2 =
         \frac{1}{{2 d \choose d} \cdot (N-d)}
         \cdot \sum_{i=1}^{N-d} \left[
-            {d \choose 0} s(t_i)
-        - {d \choose 1} s(t_{i+1})
-        + {d \choose 2} s(t_{i+2})
-        - {d \choose 3} s(t_{i+3})
-        \pm \dots
-        \mp {d \choose d} s(t_{i+d})
-        \right]^2
+                {d \choose 0} s(t_i)
+            - {d \choose 1} s(t_{i+1})
+            + {d \choose 2} s(t_{i+2})
+            - {d \choose 3} s(t_{i+3})
+            \pm \dots
+            \mp {d \choose d} s(t_{i+d})
+            \right]^2
         \label{eq:arbitrary_order_noise_estimator}
     \end{equation}
 
@@ -355,7 +364,8 @@
 
     With this said, two major problems remain with the approach of Figure \ref{fig:power_curve_spline_but_no_physics}. First, the resulting model uncertainty is extremely high, as shown by the shaded confidence intervals in Figure \ref{fig:power_curve_spline_but_no_physics}. For example, the tightest that we can bound the required power at $10\ \rm m/s$ with reasonably-strong confidence (95\% confidence interval) is between $30$ and $190$ Watts. This is a huge range and not a particularly useful insight. Near the low end of the airspeed range, the model uncertainty becomes so large that even the most basic claims are impossible to assert.
 
-     Second, the model still allows physically-implausible relationships, such as the unexplained power curve increase near $13\ \rm m/s$ and the flattening power curve near $20\ \rm m/s$. Clearly, the uncertainty bounds here are wider than what they would be if our physical insights were incorporated into the model.
+    Second, the model still allows physically-implausible relationships, such as the unexplained power curve increase near $13\ \rm m/s$ and the flattening power curve near $20\ \rm m/s$. Clearly, the uncertainty bounds here are wider than what they would be if our physical insights were incorporated into the model.
+
 
     \section{Incorporating Physics-Based Data Corrections and Domain-Specific Knowledge}
     \label{sec:physics_based_corrections}
@@ -371,9 +381,9 @@
         \frac{1}{2}m \, U(t)^2
         + m \, g \, h(t)
         + \int_0^t \left[
-        P_{\rm loss}(\tau)
-        - P_{\rm thrust}(\tau)
-        \right] \, d\tau = 0
+            P_{\rm loss}(\tau)
+            - P_{\rm thrust}(\tau)
+            \right] \, d\tau = 0
         \label{eq:total_energy}
     \end{equation}
 
@@ -396,10 +406,10 @@
         m \, U(t) \, \dot{U}(t)
         + m \, g \, \dot{h}(t)
         + \left[
-        U(t) \, D(\theta)
-        + P_{\rm avionics}
-        - V(t) \, i(t) \, \eta_{\rm propulsive}(\theta)
-        \right] = 0
+            U(t) \, D(\theta)
+            + P_{\rm avionics}
+            - V(t) \, i(t) \, \eta_{\rm propulsive}(\theta)
+            \right] = 0
         \label{eq:total_power}
     \end{equation}
 
@@ -415,7 +425,7 @@
 
     Ideally, this equation would be used to simply correct the data for the unsteady terms (i.e., acceleration and climb terms) in Equation \ref{eq:total_power}, at which point we would directly use that data and apply traditional curve-fitting techniques. However, the observant reader will notice that Equation \ref{eq:total_power} cannot, on its own, be used to correct the data. Both the propulsive efficiency and drag terms are unknown functions of the flight data and unknown parameters $\theta$, and hence these need to be solved for.
 
-    These parameters can be defined as the solution of a residual minimization problem (i.e., optimization) between our data and model—effectively, system identification. Here, the residual in question is the instantaneous $P_{\rm total}$ given in Equation \ref{eq:total_power}, and we aim to minimize some norm\footnote{Typically the $L_1$ or $L_2$ norm} of the residual vector, as resampled from the data reconstruction shown in Section \ref{subsec:optimal_sensor_data_reconstruction}. However, the interesting insight here is that changes to our model parameters affect \textit{both} the model and the corrected data, and hence the model and data must be optimized simultaneously. Stated equivalently: we are not only correcting the data using our models; we are also simultaneously fitting the models to the data.
+    These parameters can be defined as the solution of a residual minimization problem (i.e., optimization) between our data and model—effectively, system identification. Here, the residual in question is the instantaneous $P_{\rm total}$ given in Equation \ref{eq:total_power}, and we aim to minimize some norm\footnote{Typically the $L_1$ or $L_2$ norm, with the former used here for improved outlier rejection} of the residual vector, as resampled from the data reconstruction shown in Section \ref{subsec:optimal_sensor_data_reconstruction}. However, the interesting insight here is that changes to our model parameters affect \textit{both} the model and the corrected data, and hence the model and data must be optimized simultaneously. Stated equivalently: we are not only correcting the data using our models; we are also simultaneously fitting the models to the data.
 
     One other consideration to note with this energy-corrected formulation is that it relies on the time derivative of sensor data. Because our data reconstructors from Section \ref{subsec:optimal_sensor_data_reconstruction} are based on splines, these can be conveniently differentiated by conducting simple polynomial differentiation piecewise between knot points. However, the derivative of the best estimator is not necessarily the bias-variance-optimal estimator of the derivative, due to the amplification of high-frequency variation during the differentiation process. To combat this, we add a Gaussian low-pass-filter with time constant $\sigma=4\ \rm sec$ to the derivative estimator. Developing a rigorous method for determining the optimal filter time constant is left as future work, but is theoretically possible using a cross-validation approach.
 
@@ -516,13 +526,13 @@
 
 
     \section{Conclusion}
+    \label{sec:conclusion}
 
     In this paper, we have demonstrated a rigorous method for reconstructing the performance characteristics of an aircraft from flight test data. This method is based on a physics-informed correction of the data and model, and is shown to be effective at recovering the true power curve and aerodynamic polar of an example aircraft from noisy, limited, unsteady data. This method is also shown to be robust to the presence of outliers in the data, and to be able to provide uncertainty estimates for the resulting aerodynamic polar. This method is also shown to be able to recover the propulsive efficiency curve of the aircraft, which is a critical quantity for understanding the performance of the aircraft. Finally, this method is shown to be able to recover the aerodynamic polar of the aircraft from only four minutes of flight test data, which is a significant reduction in the amount of data required compared to the state of the art.
 
-    This work has focused on the ability of these inference-based reconstruction procedures to significantly reduce the required flight hours to characterize an airplane's performance. However, an alternative way to ``spend'' this increased ability to extract information is on massively reducing instrumentation costs. For example, this approach makes it conceivable to ``estimate out'' the ambient wind field\footnote{An intuitive explanation for this is that if an airplane loiters in a circle at constant power setting, the upwind and downwind groundspeeds yield information about the wind field. In practice, some additional assumptions about wind steadiness and uniformity would likely be required to collapse the $(x, y, z, t)$ space; otherwise, it is likely too large to realistically span.} from groundspeed data and power measurement alone. If this is possible, it would enable flight test engineers to perform sufficient early-stage characterization of a new crewed airplane using nothing other than the sensors available on a modern smartphone. Here, GPS, IMU, and barometer sensors provide position and groundspeed information, and the phone's microphone can be used to infer engine RPM and hence power and advance ratio from an audio spectrum. This would be a significant reduction in instrumentation cost and time compared to the state of the art.
+    This work has focused on the ability of these inference-based reconstruction procedures to significantly reduce the required flight hours to characterize an airplane's performance. However, an alternative way to ``spend'' this increased ability to extract information is on massively reducing instrumentation costs. For example, this approach makes it conceivable to ``estimate out'' the ambient wind field\footnote{An intuitive explanation for this is that if an airplane loiters in a circle at constant power setting, the upwind and downwind groundspeeds yield information about the wind field. In practice, some additional assumptions about wind steadiness and uniformity would likely be required to collapse the $(x, y, z, t)$ space; otherwise, it is likely too large to realistically span.} from groundspeed data and power measurement alone. If this is possible, it would enable flight test engineers to perform sufficient early-stage characterization of a new crewed airplane using nothing other than the sensors available on a modern smartphone. Here, GPS, IMU, and barometer sensors provide position and groundspeed information, and the phone's microphone can be used to infer engine RPM and hence power and advance ratio from an audio spectrum. If successful, this would be an enormous reduction in instrumentation cost and time compared to the state of the art.
 
-    A fair point of hesitancy here might be the fact that applying these corrections to recover useful insights from noisy, limited, unsteady data takes a significant amount of algorithmic development and mathematical complexity. However, algorithms are cheap, and more importantly, \emph{scalable} - so, once a computational workflow is established, it can easily be applied to a large number of flight test campaigns. By contrast, flight-test hours and improved instrumentation represent a recurring high cost. Therefore, it is worth investing in the development of algorithms that can extract the maximum amount of useful insight from the data that we do collect, even if this analysis is less simple.
-
+    A fair point of hesitancy here might be the fact that applying these corrections to recover useful insights from noisy, limited, unsteady data takes a significant amount of algorithmic development and mathematical complexity. However, algorithms are cheap, and more importantly, \emph{scalable} - so, once a computational workflow is established, it can easily be applied to a large number of flight test campaigns. By contrast, flight-test hours and improved instrumentation represent a recurring high cost. Therefore, it is worth investing in the development of algorithms that can extract the maximum amount of useful insight from the data that we do collect, even if this analysis is somewhat less simple.
 
 
 
