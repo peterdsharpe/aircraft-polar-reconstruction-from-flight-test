@@ -366,7 +366,7 @@
     \begin{figure}[!htb]
         \centering
         \ifdraft{}{\includegraphics[]{figures/power_polar_spline_but_no_physics}}
-        \caption{Raw uncorrected data for the power curve, with noise-variance-aware spline interpolation. A resampling bootstrap allows uncertainty quantification. This improves over the naive approach of Figure \ref{fig:power_curve_naive}, although, the lack of physics-based model structure still leads to the recovery of a physically-implausible result.}
+        \caption{Raw uncorrected data for the power curve, with a noise-variance-aware spline model. A resampling bootstrap allows uncertainty quantification. This improves over the naive approach of Figure \ref{fig:power_curve_naive}, although, the lack of physics-based model structure still leads to the recovery of a physically-implausible result.}
         \label{fig:power_curve_spline_but_no_physics}
     \end{figure}
 
@@ -444,14 +444,14 @@
     \subsection{Modeling the Unknown Functions}
     \label{subsec:modeling_unknown_functions}
 
-    There are two unknown models in Equation \ref{eq:total_power}: the propulsive efficiency and the drag. Basic model forms for both unknown functions can be taken from domain-specific knowledge.
+    There are two unknown models in Equation \ref{eq:total_power}: the propulsive efficiency and the drag. We replace these with parametric models with forms taken from domain-specific knowledge. In this example, we use simple mathematical relations to demonstrate that even basic restrictions on model form can significantly improve the quality of the resulting model. In practice, more sophisticated models based on parameterized low-fidelity analyses could be used, although this may come at the expense of reduced interpretability.
 
     \subsubsection{Drag Model}
     \label{subsubsec:drag_model}
-    The aerodynamic drag can be modeled as a function of airspeed. To do this, we use the following procedure:
+    The aerodynamic drag can be modeled as a function of airspeed, as required to close Equation \ref{eq:total_power}. To do this, we use the following procedure:
 
     \begin{enumerate}
-        \item Compute the instantaneous lift coefficient $C_L(t)$ from the airspeed $U(t)$, assuming a load factor of 1 and known aircraft properties.
+        \item Compute the instantaneous lift coefficient $C_L(t)$ from the airspeed $U(t)$, assuming a load factor of 1 and known aircraft properties (wing area, mass, etc.).
         \item Map the $C_L$ to a drag coefficient $C_D$ using the following model form and unknown parameters $\theta$:
 
         \begin{equation*}
@@ -465,6 +465,8 @@
         \noindent where all parameters $\theta_i$ here are constrained to be nonnegative.
         \item Dimensionalize the computed $C_D$ to obtain the drag.
     \end{enumerate}
+
+    This simple polynomial model form
 
     \subsubsection{Propulsive Efficiency Model}
     \label{subsubsec:propulsive_efficiency_model}
@@ -515,21 +517,30 @@
 
     \begin{figure}[!htb]
         \centering
-        \ifdraft{}{\includegraphics[]{figures/power_curve_with_physics}}
-        \caption{Power curve with physics-informed corrections on data and model, and using noise estimator with a resampling bootstrap for uncertainty quantification. Power curve agrees closely with the data and shows physically-plausible behavior. Uncertainty quantification is significantly tighter than in Figure \ref{fig:power_curve_spline_but_no_physics}, as the function space has been restricted using embedded physics knowledge.}
+        \ifdraft{}{\includegraphics[]{figures/power_curve_with_physics.pdf}}
+        \caption{Inferred power curve with physics-informed corrections on data and model, and using noise estimator with a resampling bootstrap for uncertainty quantification. Power curve agrees closely with the data and shows physically-plausible behavior. Uncertainty quantification is significantly tighter than in Figure \ref{fig:power_curve_spline_but_no_physics}, as the function space has been restricted using embedded physics knowledge.}
         \label{fig:power_curve_with_physics}
     \end{figure}
 
-    Conveniently, this process yields other critical performance information, like the aerodynamic polar and propulsive efficiency curve, ``for free'' as part of the fitting process. Furthermore, we also obtain uncertainty estimates for all these quantities, which are critical for understanding the confidence we can have in the results. An example of this is shown in \ref{fig:aerodynamic_polar_with_physics}.
+    Conveniently, this process yields other critical performance information, like the aerodynamic polar and propulsive efficiency curve, ``for free'' as part of the fitting process. These are shown in Figures \ref{fig:aerodynamic_polar_with_physics} and \ref{fig:propeller_polar_with_physics}. Furthermore, we also obtain uncertainty estimates for all these quantities, which are critical for understanding the confidence we can have in the results.
+
+    A notable observation is that the inferred aerodynamic polar of Figure \ref{fig:aerodynamic_polar_with_physics} and the propulsive efficiency curve of Figure \ref{fig:propeller_polar_with_physics} show relatively wide uncertainty bands, while the power curve of Figure \ref{fig:power_curve_with_physics} shows a relatively narrow uncertainty band. This is interesting, since in typical analysis the power curve is computed as a function of these two performance relations; hence, one would intuitively expect that the power curve would inherit the uncertainty of both relations. The reason this does not occur here is that the uncertainties in the aerodynamic polar and the propulsive efficiency curves are not independent. In other words, the power required can be inferred relatively precisely, but there is not quite enough data to rigorously determine whether power losses are more due to aerodynamic drag or propulsive inefficiency.
 
     \begin{figure}[!htb]
         \centering
-        \ifdraft{}{\includegraphics[]{figures/aerodynamic_polar_with_physics}}
-        \caption{Aerodynamic polar with physics-informed corrections on data and model, and using noise estimator with a resampling bootstrap for uncertainty quantification.}
+        \ifdraft{}{\includegraphics[]{figures/aerodynamic_polar_with_physics.pdf}}
+        \caption{Inferred aerodynamic polar with physics-informed corrections on data and model, and using noise estimator with a resampling bootstrap for uncertainty quantification.}
         \label{fig:aerodynamic_polar_with_physics}
     \end{figure}
 
     Compared to the naive approach in Figure \ref{fig:power_curve_naive}, Figure \ref{fig:power_curve_with_physics} enables us to make very accurate, physically-grounded, and uncertainty-quantified assertions about the performance of the airplane, based on minimal data (here, only four minutes of flight time).
+
+    \begin{figure}[!htb]
+        \centering
+        \ifdraft{}{\includegraphics[]{figures/propeller_polar_with_physics.pdf}}
+        \caption{Inferred propulsive efficiency curve with physics-informed corrections on data and model, and using noise estimator with a resampling bootstrap for uncertainty quantification.}
+        \label{fig:propeller_polar_with_physics}
+    \end{figure}
 
 
     \section{Reproducibility Statement}

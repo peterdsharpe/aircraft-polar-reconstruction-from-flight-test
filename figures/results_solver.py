@@ -139,15 +139,16 @@ def get_results(bootstrap_resample=False):
 
     ### Model 3
     prop_eff_params = {
-        "scale"           : opti.variable(init_guess=0.7, lower_bound=0, upper_bound=1),
-        "J_eff_max"         : opti.variable(init_guess=1, lower_bound=0),
+        "scale"        : opti.variable(init_guess=0.7, lower_bound=0, upper_bound=1),
+        "J_eff_max"    : opti.variable(init_guess=1, lower_bound=0),
         "J_pitch_speed": opti.variable(init_guess=2, upper_bound=10),
-        "softness"        : opti.variable(init_guess=0.3, lower_bound=0.1),
+        "softness"     : opti.variable(init_guess=0.3, lower_bound=0.1),
     }
 
     prop_efficiency = prop_eff_params["scale"] * np.softmin(
         propto_J / prop_eff_params["J_eff_max"],
-        (propto_J - prop_eff_params["J_pitch_speed"]) / (prop_eff_params["J_eff_max"] - prop_eff_params["J_pitch_speed"]),
+        (propto_J - prop_eff_params["J_pitch_speed"]) / (
+                prop_eff_params["J_eff_max"] - prop_eff_params["J_pitch_speed"]),
         softness=prop_eff_params["softness"]
     )
 
@@ -161,19 +162,66 @@ def get_results(bootstrap_resample=False):
     S = 1.499
     CL = mass_total * 9.81 / (q * S)
 
-    CD_params = {
-        "CD0"  : opti.variable(init_guess=0.07, lower_bound=0, upper_bound=1),
-        "CLCD0": opti.variable(init_guess=0.5, lower_bound=0, upper_bound=1.5),
-        "CD2"  : opti.variable(init_guess=0.05, lower_bound=0, upper_bound=10),
-        "CD3"  : opti.variable(init_guess=0.05, lower_bound=0, upper_bound=10),
-        "CD4"  : opti.variable(init_guess=0.05, lower_bound=0, upper_bound=10),
-    }
+    ### Model 0
+    # CD_params = {
+    #     "CD0"  : opti.variable(init_guess=0.07, lower_bound=0, upper_bound=1),
+    #     "CLCD0": opti.variable(init_guess=0.5, lower_bound=0, upper_bound=1.5),
+    #     "CD2"  : opti.variable(init_guess=0.05, lower_bound=0, upper_bound=10),
+    #     "CD3"  : opti.variable(init_guess=0.05, lower_bound=0, upper_bound=10),
+    #     "CD4"  : opti.variable(init_guess=0.05, lower_bound=0, upper_bound=10),
+    # }
+    #
+    # CD = (
+    #         CD_params["CD0"]
+    #         + CD_params["CD2"] * np.abs(CL - CD_params["CLCD0"]) ** 2
+    #         + CD_params["CD3"] * np.abs(CL - CD_params["CLCD0"]) ** 3
+    #         + CD_params["CD4"] * np.abs(CL - CD_params["CLCD0"]) ** 4
+    # )
 
-    CD = (
-            CD_params["CD0"]
-            + CD_params["CD2"] * np.abs(CL - CD_params["CLCD0"]) ** 2
-            + CD_params["CD3"] * np.abs(CL - CD_params["CLCD0"]) ** 3
-            + CD_params["CD4"] * np.abs(CL - CD_params["CLCD0"]) ** 4
+    ### Model 1
+    CD_params = {
+        "CLMIN": opti.variable(init_guess=0.),
+        "CDMIN": opti.variable(init_guess=0.08, lower_bound=0, upper_bound=1),
+        "CL0"  : opti.variable(init_guess=0.6, lower_bound=0),
+        "CD0"  : opti.variable(init_guess=0.05, lower_bound=0, upper_bound=1),
+        "CLMAX": opti.variable(init_guess=1.4),
+        "CDMAX": opti.variable(init_guess=0.10, lower_bound=0, upper_bound=1),
+    }
+    CLMIN = CD_params["CLMIN"]
+    CDMIN = CD_params["CDMIN"]
+    CL0 = CD_params["CL0"]
+    CD0 = CD_params["CD0"]
+    CLMAX = CD_params["CLMAX"]
+    CDMAX = CD_params["CDMAX"]
+
+    opti.subject_to([
+        CLMIN < CL0,
+        CLMAX > CL0,
+        CDMIN > CD0,
+
+        CD_params["CLMIN"] < CD_params["CL0"],
+        CD_params["CLMAX"] > CD_params["CL0"],
+        CD_params["CDMIN"] > CD_params["CD0"],
+        CD_params["CDMAX"] > CD_params["CD0"],
+    ])
+
+    CLINC, CDINC = 0.2, 0.0500
+    CDX1 = 2.0 * (CDMIN - CD0) * (CLMIN - CL0) / (CLMIN - CL0) ** 2
+    CDX2 = 2.0 * (CDMAX - CD0) * (CLMAX - CL0) / (CLMAX - CL0) ** 2
+    CLFAC = 1.0 / CLINC
+
+    CD = np.where(
+        CL < CLMIN,
+        CDMIN + CDINC * (CLFAC * (CL - CLMIN)) ** 2 + CDX1 * (1.0 - (CL - CL0) / (CLMIN - CL0)),
+        np.where(
+            CL < CL0,
+            CD0 + (CDMIN - CD0) * (CL - CL0) ** 2 / (CLMIN - CL0) ** 2,
+            np.where(
+                CL < CLMAX,
+                CD0 + (CDMAX - CD0) * (CL - CL0) ** 2 / (CLMAX - CL0) ** 2,
+                CDMAX + CDINC * (CLFAC * (CL - CLMAX)) ** 2 - CDX2 * (1.0 - (CL - CL0) / (CLMAX - CL0))
+            )
+        )
     )
 
     drag_power = CD * q * S * f(airspeed(t))
@@ -235,11 +283,39 @@ def get_results(bootstrap_resample=False):
     mean_propto_J = np.mean(propto_J)
 
     def steady_state_CD(CL):
-        return (
-                CD_params["CD0"]
-                + CD_params["CD2"] * np.abs(CL - CD_params["CLCD0"]) ** 2
-                + CD_params["CD3"] * np.abs(CL - CD_params["CLCD0"]) ** 3
-                + CD_params["CD4"] * np.abs(CL - CD_params["CLCD0"]) ** 4
+        ### Model 0
+        # return (
+        #         CD_params["CD0"]
+        #         + CD_params["CD2"] * np.abs(CL - CD_params["CLCD0"]) ** 2
+        #         + CD_params["CD3"] * np.abs(CL - CD_params["CLCD0"]) ** 3
+        #         + CD_params["CD4"] * np.abs(CL - CD_params["CLCD0"]) ** 4
+        # )
+
+        ### Model 1
+        CLMIN = CD_params["CLMIN"]
+        CDMIN = CD_params["CDMIN"]
+        CL0 = CD_params["CL0"]
+        CD0 = CD_params["CD0"]
+        CLMAX = CD_params["CLMAX"]
+        CDMAX = CD_params["CDMAX"]
+
+        CLINC, CDINC = 0.2, 0.0500
+        CDX1 = 2.0 * (CDMIN - CD0) * (CLMIN - CL0) / (CLMIN - CL0) ** 2
+        CDX2 = 2.0 * (CDMAX - CD0) * (CLMAX - CL0) / (CLMAX - CL0) ** 2
+        CLFAC = 1.0 / CLINC
+
+        return np.where(
+            CL < CLMIN,
+            CDMIN + CDINC * (CLFAC * (CL - CLMIN)) ** 2 + CDX1 * (1.0 - (CL - CL0) / (CLMIN - CL0)),
+            np.where(
+                CL < CL0,
+                CD0 + (CDMIN - CD0) * (CL - CL0) ** 2 / (CLMIN - CL0) ** 2,
+                np.where(
+                    CL < CLMAX,
+                    CD0 + (CDMAX - CD0) * (CL - CL0) ** 2 / (CLMAX - CL0) ** 2,
+                    CDMAX + CDINC * (CLFAC * (CL - CLMAX)) ** 2 - CDX2 * (1.0 - (CL - CL0) / (CLMAX - CL0))
+                )
+            )
         )
 
     def steady_state_prop_efficiency(propto_J):
@@ -268,7 +344,8 @@ def get_results(bootstrap_resample=False):
         ### Model 3
         return prop_eff_params["scale"] * np.softmin(
             propto_J / prop_eff_params["J_eff_max"],
-            (propto_J - prop_eff_params["J_pitch_speed"]) / (prop_eff_params["J_eff_max"] - prop_eff_params["J_pitch_speed"]),
+            (propto_J - prop_eff_params["J_pitch_speed"]) / (
+                    prop_eff_params["J_eff_max"] - prop_eff_params["J_pitch_speed"]),
             softness=prop_eff_params["softness"]
         )
 

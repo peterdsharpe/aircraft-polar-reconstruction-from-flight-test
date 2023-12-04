@@ -224,7 +224,7 @@ plot_with_bootstrapped_uncertainty(propto_J_plot, prop_efficiency_plot)
 # )
 
 # plt.xlim(0, b["propto_J"][mask].max())
-plt.xlim(0, 1.8)
+plt.xlim(0, 2)
 plt.ylim(bottom=0, top=1)
 #
 p.set_ticks(0.5, 0.1, 0.2, 0.05)
