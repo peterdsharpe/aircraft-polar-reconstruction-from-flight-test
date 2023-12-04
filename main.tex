@@ -47,11 +47,13 @@
                  $P_{\rm in}$ & input power to propulsion system \\
                  $P_{\rm thrust}$ & useful power at airstream, $T \cdot U$\\
                  $\sigma_n$ & standard deviation of noise component \\
+                 $s(t)$ & true signal component of measurement at time $t$ \\
                  $\theta_i$ & various unknown parameters of the aircraft's performance curves\\
                  $T$ & thrust force \\
                  $t$ & time \\
                  $U(t)$ & true airspeed at time $t$ \\
-                 $V(t)$ & Battery voltage at time $t$ \\
+                 $V(t)$ & battery voltage at time $t$ \\
+                 $x(t)$ & measured data (signal + noise) of a generic sensor at time $t$ \\
     \end{longtable*}}
 
 
@@ -255,52 +257,45 @@
 
     \subsubsection{Initial Approach and a First-Order Data-Based Noise Estimator}
 
-    One way to do this is by assuming that the data is ``slow'' relative to the sample rate. If this is true, then subsequent samples will effectively have the same underlying truth value, but with noise drawn independently from the same underlying distribution.
+    One way to do this is by assuming that the data is ``slow'' relative to the sample rate, while the noise remains white. If this is true, then subsequent samples will effectively have the same underlying truth value, but with noise drawn independently from the same underlying distribution.
 
-    Quantitatively, consider a scenario where the true data is $x(t)$, and the noise of the sample $n(t)$ is drawn from $\mathcal{N}(0, \sigma^2_n)$, with initially-unknown $\sigma_n$. Then our observed sensor data $s(t)$ can be written as:
+    Quantitatively, consider a scenario where the measured data $x(t)$ consists of a true signal $s(t)$ and noise $n(t)$:
 
-    $$s(t) = x(t) + n(t)$$ % TODO redo noise derviation
+    $$x(t) = s(t) + n(t)$$
 
-    \noindent For two subsequent discrete samples at nearby times $t_1$ and $t_2$, we can say:
+    Assume the noise of the sample $n(t)$ is drawn from $\mathcal{N}(0, \sigma^2_n)$, with initially-unknown $\sigma_n$. Now, consider two discrete measurements taken at adjacent points in time $t_1$ and $t_2$:
 
     \begin{align*}
-        s(t_1) = x(t_1) + n(t_1) &&
-        s(t_2) = x(t_2) + n(t_2)
+        x(t_1) = s(t_1) + n(t_1) &&
+        x(t_2) = s(t_2) + n(t_2)
     \end{align*}
 
-    \noindent If $t_1 \approx t_2$ (as would be the case for subsequent samples), then $x(t_1) \approx x(t_2)$, contingent on the sample rate greatly exceeding the effective fastest frequency of the true signal. Hence:
+    \noindent If $t_1 \approx t_2$ (as would be the case for subsequent samples), then $s(t_1) \approx s(t_2)$, contingent on the sample rate greatly exceeding the effective fastest frequency of the true signal. Hence:
 
-    $$s(t_2) - s(t_1) \approx n(t_2) - n(t_1)$$
+    $$x(t_2) - x(t_1) \approx n(t_2) - n(t_1)$$
 
     In other words, the difference of two subsequent observed samples will be approximately equal to the difference of two independent draws from the same noise distribution. This means that we can estimate the variance of the noise by looking at the variance of the differences between subsequent samples. From the properties of the difference of two independent random normal variables, we can then say:
 
-    $$n(t_2) - n(t_1) \sim \mathcal{N}(0, 2\sigma^2_n)$$
+    $$n(t_2) - n(t_1) \sim \mathcal{N}(0,\; 2\, \sigma^2_n)$$
 
     \noindent where $\sigma^2_n$ is the variance of the sensor noise. So, the following is then approximately true:
 
-    $$s(t_2) - s(t_1) \sim \mathcal{N}(0, 2\sigma^2_n)$$
+    $$x(t_2) - x(t_1) \sim \mathcal{N}(0,\; 2\, \sigma^2_n)$$
 
-    Therefore, by taking the mean difference across all adjacent pairs of sample data, we can reconstruct the variance of the noise as:
+    Therefore, taking the mean difference across all adjacent pairs of measured data $x(t)$ provides an unbiased estimator of $\sigma_n$, the variance of the noise:
 
     \begin{equation}
-        \sigma^2_n = \frac{1}{2 \cdot (N-1)} \sum_{i=1}^{N-1} \Big( s(t_{i+1}) - s(t_i) \Big)^2
+        \sigma^2_n = \frac{1}{2 \cdot (N-1)} \sum_{i=1}^{N-1} \Big( x(t_{i+1}) - x(t_i) \Big)^2
         \label{eq:1st_order_noise_estimator}
     \end{equation}
 
-    \noindent where $N$ is the number of samples in the dataset.
+    \noindent where $N$ is the number of samples in the dataset. We call this a \emph{first-order} noise estimator as it takes a first-order numerical derivative of the measured data.
 
     \subsubsection{Numerical Demonstration of the First-Order Noise Estimator}
 
     We can demonstrate that this works in practice and is convergent to the correct answer by constructing a synthetic dataset with known noise properties, and then reconstructing the noise variance using the method above. The synthetic dataset we use is a simple sinusoid at some frequency $f_{\rm signal}$ with added independent, normally-distributed noise. We then sample this sinusoid at some frequency $f_{\rm sample}$ (ideally with $f_{\rm sample} \gg f_{\rm signal}$). We attempt to recover the noise variance using the method above and compare it to the true noise variance. This process is described in Figure \ref{fig:noise_variance_demo_procedure}, with results for the first-order estimator in the respective column of Table \ref{tab:noise_variance_demo}. The higher-order estimators are described in the following sections.
 
-    \begin{figure}[H]
-        \centering
-        \ifdraft{}{\includegraphics[trim=1cm 1cm 1cm 1cm,clip=true]{figures/noise_variance_demo_procedure}}
-        \caption{Procedure for numerical demonstration of estimator performance}
-        \label{fig:noise_variance_demo_procedure}
-    \end{figure}
-
-    \begin{table}[H]
+    \begin{table}[!h]
         \centering
         \caption{Numerical demonstration of noise variance estimator performance}
         \label{tab:noise_variance_demo}
@@ -314,9 +309,16 @@
         \end{tabular}
     \end{table}
 
-    As shown in Table \ref{tab:noise_variance_demo}, the first-order noise estimator yields a $\sigma_n$ value that is very close to the true valueaero. We will also show later that this estimator is convergent to the true value as the number of samples increases.
+    \begin{figure}[!h]
+        \centering
+        \ifdraft{}{\includegraphics[trim=1cm 1cm 1cm 1cm,clip=true]{figures/noise_variance_demo_procedure}}
+        \caption{Procedure for numerical demonstration of estimator performance}
+        \label{fig:noise_variance_demo_procedure}
+    \end{figure}
 
-    However, this estimator is only first-order convergent with respect to the ratio between the sampling frequency $f_{\rm sample}$ and the underlying dynamics of the system $f_{\rm signal}$. In other words, if the system is ``fast'' relative to the sample rate, then the estimator will be inaccurate. This is demonstrated in the third row of Table \ref{tab:noise_variance_demo}, where the estimator is off by a factor of 3.
+    As shown in Table \ref{tab:noise_variance_demo}, the first-order noise estimator yields a $\sigma_n$ value that is very close to the true value. We will also show later that this estimator is convergent to the true value as the number of samples increases.
+
+    However, this estimator is only first-order convergent with respect to the ratio between the sampling frequency $f_{\rm sample}$ and the underlying dynamics of the system $f_{\rm signal}$. In other words, if the system is ``fast'' relative to the sample rate, then the estimator will be inaccurate. This is demonstrated in the third row of Table \ref{tab:noise_variance_demo}, where the estimator produces an incorrect result by a factor of 3.
 
     \subsubsection{Second-Order Noise Estimator}
 
@@ -325,15 +327,13 @@
     Derivation of this estimator follows similar principles to the first-order estimator above, with the key result as follows:
 
     \begin{equation}
-        \sigma_n^2 = \frac{1}{6 \cdot (N-2)} \sum_{i=1}^{N-2} \Big( s(t_{i+2}) - 2 \cdot s(t_{i+1}) + s(t_i) \Big)^2
+        \sigma_n^2 = \frac{1}{6 \cdot (N-2)} \sum_{i=1}^{N-2} \Big( x(t_{i+2}) - 2 \cdot x(t_{i+1}) + x(t_i) \Big)^2
         \label{eq:2nd_order_noise_estimator}
     \end{equation}
 
-    \noindent where $N$ is the number of samples in the dataset.
+    \noindent where $N$ is the number of samples in the dataset. As shown in Table \ref{tab:noise_variance_demo}, the second-order estimator has superior performance to the first-order estimator when the sample and signal frequencies are not well-separated.
 
-    As shown in Table \ref{tab:noise_variance_demo}, the second-order estimator has superior performance to the first-order estimator when the sample and signal frequencies are not well-separated.
-
-    Notably, this effectively implements a first-order, second-degree finite-difference of the underlying data—a discrete derivative. It's instructive to consider the theoretical underpinning of using a discrete derivative operator here. If we assume that the underlying true signal is relatively low-frequency (i.e., smooth), then as we take more discrete derivatives of the observed data, the signal component will asymptote to zero (assuming $f_{\rm sample} \geq f_{\rm signal}$). Stated equivalently, the frequency spectrum of the true signal is assumed to have some cutoff frequency (analogous to $f_{\rm signal}$), above which the power spectral density gradually goes to zero. We don't need to specify this cutoff frequency or know it precisely \emph{a priori}; the remarks presented here merely require that one exists and is somewhere below $f_{\rm sample}$.
+    Notably, this effectively implements a first-order, second-degree finite-difference of the underlying data—a discrete derivative. It's instructive to consider the theoretical underpinning of using a discrete derivative operator here. If we assume that the underlying true signal is relatively low-frequency (i.e., smooth), then as we take more discrete derivatives of the observed data, the signal component will asymptote to zero (assuming $f_{\rm sample} \geq f_{\rm signal}$). Stated equivalently, the frequency spectrum of the true signal is assumed to have some cutoff frequency (analogous to $f_{\rm signal}$), above which the power spectral density gradually goes to zero.
 
     In contrast, the noise is assumed to be independent, which means that the noise component of the observed data will not go to zero as we take successive derivatives. Stated equivalently, the frequency spectrum of the noise is white, with uniform spectral power across all frequencies. Therefore, repeated application of the discrete derivative operator acts as a way to spectrally-separate the noise from the signal - a key insight into this method.
 
@@ -352,12 +352,12 @@
         \sigma_n^2 =
         \frac{1}{{2 d \choose d} \cdot (N-d)}
         \cdot \sum_{i=1}^{N-d} \left[
-                {d \choose 0} s(t_i)
-            - {d \choose 1} s(t_{i+1})
-            + {d \choose 2} s(t_{i+2})
-            - {d \choose 3} s(t_{i+3})
+                {d \choose 0} x(t_i)
+            - {d \choose 1} x(t_{i+1})
+            + {d \choose 2} x(t_{i+2})
+            - {d \choose 3} x(t_{i+3})
             \pm \dots
-            \mp {d \choose d} s(t_{i+d})
+            \mp {d \choose d} x(t_{i+d})
             \right]^2
         \label{eq:arbitrary_order_noise_estimator}
     \end{equation}
@@ -553,7 +553,7 @@
 
     With the optimization problem solved, we can now use the resulting $\theta$ values to compute the corrected data and model. This is shown in Figure \ref{fig:power_curve_with_physics}. The corrected data and model are now in excellent agreement, and the corrected data has significantly less unexplained variance than the raw data. The remaining unexplained variance is attributable to a variety of factors, such as wind updrafts and downdrafts and non-unity load factors during banked flight. In theory, both these effects could be corrected out using a similar inference procedure that is shown in this work (which could be augmented by, for example, IMU data). This is left as future work, which, if successful, would reduce the data spread in Figure \ref{fig:power_curve_with_physics} further.
 
-    \begin{figure}[h]
+    \begin{figure}[!htb]
         \centering
         \ifdraft{}{\includegraphics[]{figures/power_curve_with_physics.pdf}}
         \caption{Inferred power curve with physics-informed corrections on data and model, and using noise estimator with a resampling bootstrap for uncertainty quantification. Power curve agrees closely with the data and shows physically-plausible behavior. Uncertainty quantification is significantly tighter than in Figure \ref{fig:power_curve_spline_but_no_physics}, as the function space has been restricted using embedded physics knowledge.}
@@ -564,7 +564,7 @@
 
     A notable observation is that the inferred aerodynamic polar of Figure \ref{fig:aerodynamic_polar_with_physics} and the propulsive efficiency curve of Figure \ref{fig:propeller_polar_with_physics} show relatively wide uncertainty bands, while the power curve of Figure \ref{fig:power_curve_with_physics} shows a relatively narrow uncertainty band. This is interesting, since in typical analysis the power curve is computed as a function of these two performance relations; hence, one would intuitively expect that the power curve would inherit the uncertainty of both relations. The reason this does not occur here is that the uncertainties in the aerodynamic polar and the propulsive efficiency curves are not independent. In other words, the power required can be inferred relatively precisely, but there is not quite enough data to rigorously determine whether power losses are more due to aerodynamic drag or propulsive inefficiency.
 
-    \begin{figure}[h]
+    \begin{figure}[!htb]
         \centering
         \ifdraft{}{\includegraphics[]{figures/aerodynamic_polar_with_physics.pdf}}
         \caption{Inferred aerodynamic polar with physics-informed corrections on data and model, and using noise estimator with a resampling bootstrap for uncertainty quantification.}
@@ -573,7 +573,7 @@
 
     Compared to the naive approach in Figure \ref{fig:power_curve_naive}, Figure \ref{fig:power_curve_with_physics} enables us to make very accurate, physically-grounded, and uncertainty-quantified assertions about the performance of the airplane, based on minimal data (here, only four minutes of flight time).
 
-    \begin{figure}[h]
+    \begin{figure}[!htb]
         \centering
         \ifdraft{}{\includegraphics[]{figures/propeller_polar_with_physics.pdf}}
         \caption{Inferred propulsive efficiency curve with physics-informed corrections on data and model, and using noise estimator with a resampling bootstrap for uncertainty quantification.}
@@ -584,8 +584,6 @@
     \section{Reproducibility Statement}
 
     All code and data used in this paper is publicly available at \url{https://github.com/peterdsharpe/aircraft-polar-reconstruction-from-flight-test}.
-
-    \afterpage{\FloatBarrier}
 
     \section{Conclusion}
     \label{sec:conclusion}
