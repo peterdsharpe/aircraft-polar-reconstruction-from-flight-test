@@ -25,6 +25,7 @@
 
     {\renewcommand\arraystretch{1.0}
     \noindent\begin{longtable*}{@{}l @{\quad=\quad} l@{}}
+                 AGL & above ground level \\
                  $C_D$ & drag coefficient \\
                  $C_L$ & lift coefficient \\
                  $c_J$ & a quantity proportional to the propeller advance ratio $J$ \\
@@ -118,7 +119,7 @@
 
     The example given in the subsequent sections is for a small electric-driven propeller aircraft, although the methodology is applicable to any aircraft type. Some considerations for applying this methodology to other aircraft types are discussed in Section \ref{sec:conclusion}.
 
-    \begin{figure}[!htb]
+    \begin{figure}[H]
         \centering
         \ifdraft{}{\includegraphics[width=\textwidth, trim=1cm 1cm 1cm 1cm,clip=true]{figures/overall_procedure}}
         \caption{Process for inference-based performance reconstruction from flight data}
@@ -134,9 +135,9 @@
 
     \subsection{Flight Test Campaign}
 
-    The aircraft was flown in the vicinity of the Charles river basin near Cambridge, MA. Five tests were conducted on the morning of May 3, 2023, of which two were airborne flight tests. The final airborne flight test lasted approximately 260 seconds (4.3 minutes), beginning and ending with a successful water takeoff and landing. Figure \ref{fig:solar_surfer_flight} depicts a still image of the aircraft in flight. A simple racetrack-like pattern was flown, as shown in Figure \ref{fig:solar_surfer_track}. Winds were calm at roughly 1.5 m/s from the south.
+    The aircraft was flown in the vicinity of the Charles River basin near Cambridge, MA. Five tests were conducted on the morning of May 3, 2023, of which two were airborne flight tests. The final airborne flight test lasted approximately 260 seconds (4.3 minutes), beginning and ending with a successful water takeoff and landing. Figure \ref{fig:solar_surfer_flight} depicts a still image of the aircraft in flight. A simple racetrack-like pattern was flown, as shown in Figure \ref{fig:solar_surfer_track}. Winds were calm at roughly 1.5 m/s from the south.
 
-    \begin{figure}[!htb]
+    \begin{figure}[H]
         \centering
         \begin{subfigure}[b]{0.45\textwidth}
             \ifdraft{}{\includegraphics[width=\textwidth]{assets/Flight1_02549.JPG}}
@@ -155,17 +156,35 @@
 
     Figure \ref{fig:raw_flight_data} illustrates the subset of the raw sensor data during flight that will be used for performance reconstruction. Overall, the data is reasonable, and we can clearly identify takeoff and landing by the strong increase in barometric altimeter noise near $t=0\ \rm sec$ and $t=263\ \rm sec$. We can also identify several distinct flight phases, such as a high-speed pass near $t=150\ \rm sec$ and gliding periods near $t=40\ \rm sec$, $t=210\ \rm sec$, and $t=250\ \rm sec$.
 
-    \begin{figure}[!htb]
+    \begin{figure}[H]
         \centering
         \ifdraft{}{\includegraphics[width=\textwidth]{figures/flight_raw_data}}
-        \caption{Raw sensor data from test flight}
+        \caption{Raw sensor data from \emph{Solar Surfer} aircraft test flight}
         \label{fig:raw_flight_data}
     \end{figure}
 
+    Summary statistics of this data are given in Table \ref{tab:aircraft_stats}.
+
+    \begin{table}[H]
+        \centering
+        \caption{Summary statistics of raw sensor data from \emph{Solar Surfer} aircraft test flight. Based on 1,315 samples per measured quantity.}
+        \begin{tabular}{lcccc}
+            \toprule
+            Description   & Airspeed [m/s] & Altitude AGL [m] & Voltage [V] & Current [A] \\ \midrule
+            Mean          & 10.8           & 16.4             & 15.05       & 10.31       \\
+            Standard Dev. & 2.52           & 6.81             & 1.08        & 13.73       \\
+            Min           & 5.0            & 0                & 11.13       & 0.00        \\
+            25\%          & 9.1            & 12.3             & 14.69       & 0.94        \\
+            50\%          & 10.3           & 15.4             & 15.28       & 5.25        \\
+            75\%          & 11.7           & 19.3             & 15.67       & 13.28       \\
+            Max           & 20.9           & 35.6             & 16.77       & 67.53       \\ \bottomrule
+        \end{tabular}
+        \label{tab:aircraft_stats}
+    \end{table}
 
     However, there are two primary problems with the data we have. Firstly, all the data sources, and in particular the airspeed sensor, yield noisy measurements. The unsteady corrections that we will later implement require taking the derivative of this data; this is a problem because taking the derivative of noisy data tends to amplify the noise further.
 
-    Secondly, the total amount of data is extremely limited, both in duration and sample rate. For example, there are only ~1,200 data points \emph{in total} for each of the plotted sensor traces, and this is before eliminating noise. After eliminating noise (which effectively acts as a low-pass filter on our data, as noise tends to be relatively high-frequency), the effective amount of information we have from the sensors is quite limited. While 1,200 data points might be sufficient to characterize the aircraft flight performance at a single operating point (i.e., a single power setting and airspeed), it is typically a vastly insufficient quantity of data to characterize any substantial portion of the flight envelope.
+    Secondly, the total amount of data is extremely limited, both in duration and sample rate. For example, there are only 1,315 data points \emph{in total} for each of the plotted sensor traces. After eliminating noise (which effectively acts as a low-pass filter on our data, as noise tends to be relatively high-frequency), the effective amount of information we have from the sensors is quite limited. While traditional methods might be able to extract general aircraft flight performance based on this quantity of data (i.e., average required power over the flight), a detailed airspeed-based power curve is not typically achievable with such limited data.
 
     Consider that even the most sophisticated techniques for system identification via statistical inference require the system to be observable in some form - no amount of math can recover a signal that is simply not present in the data. This is difficult, because after noise removal, the data really no more than perhaps a half-dozen ``system excitations'' from which we can infer aircraft performance. For these reasons, this dataset makes a good example case for what kinds of flight data reconstruction are possible with very limited, noisy data using statistical inference techniques and corrections from unsteady flight physics.
 
@@ -240,7 +259,7 @@
 
     Quantitatively, consider a scenario where the true data is $x(t)$, and the noise of the sample $n(t)$ is drawn from $\mathcal{N}(0, \sigma^2_n)$, with initially-unknown $\sigma_n$. Then our observed sensor data $s(t)$ can be written as:
 
-    $$s(t) = x(t) + n(t)$$
+    $$s(t) = x(t) + n(t)$$ % TODO redo noise derviation
 
     \noindent For two subsequent discrete samples at nearby times $t_1$ and $t_2$, we can say:
 
@@ -274,14 +293,14 @@
 
     We can demonstrate that this works in practice and is convergent to the correct answer by constructing a synthetic dataset with known noise properties, and then reconstructing the noise variance using the method above. The synthetic dataset we use is a simple sinusoid at some frequency $f_{\rm signal}$ with added independent, normally-distributed noise. We then sample this sinusoid at some frequency $f_{\rm sample}$ (ideally with $f_{\rm sample} \gg f_{\rm signal}$). We attempt to recover the noise variance using the method above and compare it to the true noise variance. This process is described in Figure \ref{fig:noise_variance_demo_procedure}, with results for the first-order estimator in the respective column of Table \ref{tab:noise_variance_demo}. The higher-order estimators are described in the following sections.
 
-    \begin{figure}[!htb]
+    \begin{figure}[H]
         \centering
         \ifdraft{}{\includegraphics[trim=1cm 1cm 1cm 1cm,clip=true]{figures/noise_variance_demo_procedure}}
         \caption{Procedure for numerical demonstration of estimator performance}
         \label{fig:noise_variance_demo_procedure}
     \end{figure}
 
-    \begin{table}[!htb]
+    \begin{table}[H]
         \centering
         \caption{Numerical demonstration of noise variance estimator performance}
         \label{tab:noise_variance_demo}
@@ -295,7 +314,7 @@
         \end{tabular}
     \end{table}
 
-    As shown in Table \ref{tab:noise_variance_demo}, the first-order noise estimator yields a $\sigma_n$ value that is very close to the true value. We will also show later that this estimator is convergent to the true value as the number of samples increases.
+    As shown in Table \ref{tab:noise_variance_demo}, the first-order noise estimator yields a $\sigma_n$ value that is very close to the true valueaero. We will also show later that this estimator is convergent to the true value as the number of samples increases.
 
     However, this estimator is only first-order convergent with respect to the ratio between the sampling frequency $f_{\rm sample}$ and the underlying dynamics of the system $f_{\rm signal}$. In other words, if the system is ``fast'' relative to the sample rate, then the estimator will be inaccurate. This is demonstrated in the third row of Table \ref{tab:noise_variance_demo}, where the estimator is off by a factor of 3.
 
@@ -452,26 +471,32 @@
 
     \begin{enumerate}
         \item Compute the instantaneous lift coefficient $C_L(t)$ from the airspeed $U(t)$, assuming a load factor of 1 and known aircraft properties (wing area, mass, etc.).
-        \item Map the $C_L$ to a drag coefficient $C_D$ using the following model form and unknown parameters $\theta$:
+        \item Map the $C_L$ to a drag coefficient $C_D$ using a parametric model with unknown parameters $\theta_1$ to $\theta_6$. The form of this model is a piecewise-quadratic $C_D(C_L)$ function, as shown in Figure \ref{fig:aero_polar_form}. This model form is identical to the assumed form of the profile drag function in the AVL \cite{drela_athena_2004} aerodynamics code. In this model form:\\
+        \begin{itemize}
+            \item $(\theta_1, \theta_2)$ represents the point of positive stall onset
+            \item $(\theta_3, \theta_4)$ represents the minimum drag point
+            \item $(\theta_5, \theta_6)$ represents the point of negative stall onset
+        \end{itemize}
+        \ \\The piecewise-quadratic function is constructed to be $C^1$-continuous between the four regions delineated by these points. This requirement fully-constrains the non-stalled regions of the curve. The regions above positive stall and below negative stall use an assumed curvature (identical to the values used in AVL \cite{drela_athena_2004}) that generally models post-stall drag rise.
 
-        \begin{equation*}
-            C_D =
-            \theta_0
-            \: + \: \theta_2 \cdot (C_L - \theta_1)^2
-            \: + \: \theta_3 \cdot |C_L - \theta_1|^3
-            \: + \: \theta_4 \cdot (C_L - \theta_1)^4
-            \label{eq:drag_coefficient}
-        \end{equation*}
-        \noindent where all parameters $\theta_i$ here are constrained to be nonnegative.
         \item Dimensionalize the computed $C_D$ to obtain the drag.
     \end{enumerate}
 
-    This simple polynomial model form
+    \begin{figure}[H]
+        \centering
+        \includesvg{figures/aero_polar_form.svg}
+        \caption{Assumed parameterized form of the aerodynamic polar, where drag coefficient is a piecewise-quadratic function of the lift coefficient. Same mathematical form as the profile drag function used by AVL \cite{drela_athena_2004}.}
+        \label{fig:aero_polar_form}
+    \end{figure}
 
     \subsubsection{Propulsive Efficiency Model}
     \label{subsubsec:propulsive_efficiency_model}
 
-    Similarly, a characteristic model for the propulsive efficiency can be computed as follows:
+    Similarly, a characteristic model for the propulsive efficiency is defined based on domain-specific knowledge. In an ideal case, this model would take the propeller advance ratio $J$ as an input and yield the propulsive efficiency $\eta_{\rm propulsive}$ as an output. However, the advance ratio is not directly measurable in this \emph{Solar Surfer} case study, as this requires propeller RPM data which is not available. However, we do have sufficient data to infer a quantity known to differ from the advance ratio $J$ by a constant factor; we denote this proportional quantity $c_J$.
+
+    Therefore, the propulsive efficiency model is a mapping from $c_J$ to $\eta_{\rm propulsive}$, rather than from $J$ to $\eta_{\rm propulsive}$. Although this means that the maximum-efficiency advance ratio $J$ cannot be estimated, the peak propulsive efficiency itself can be estimated; ultimately, it is the peak efficiency that is the primary performance metric of interest.
+
+    To construct this model, we use the following procedure:
 
     \begin{enumerate}
         \item Use the measured current $i(t)$ to estimate $c_n$, a quantity proportional to the propeller rotational rate $n$, using the $P_{\rm in}\propto n^3$ relationship found using the Buckingham $\pi$ theorem \cite{unified_propellers}:
@@ -484,16 +509,29 @@
         \end{equation*}
         \item Map $c_J$ to a propulsive efficiency $\eta_{\rm propulsive}$ using the following model form and unknown parameters $\theta$:
 
-        \begin{equation*}
+        \begin{equation}
             \eta_{\rm propulsive} =
-            \theta_5
-            + \theta_6 \cdot \tanh \left(
-            \frac{c_J}{\theta_7} - \theta_8
+            \theta_7 \cdot \text{softmin} \left(\
+            c_J / \theta_8,\quad
+            \frac{c_J - \theta_9}{\theta_8 - \theta_9}\
             \right)
+        \end{equation}
+
+        \noindent where softmin is a smooth approximation of the minimum function, analogous to the logsumexp definition of softmax by Cook and others \cite{cook_basic_2011}:
+
+        \begin{equation*}
+            \text{softmin}(x, y) = -\theta_{10} \cdot \ln \left( e^{-x / \theta_{10}} + e^{-y / \theta_{10}} \right)
         \end{equation*}
+%        where all parameters $\theta_i$ here are constrained in such a way that $0 \leq \eta_{\rm propulsive} \leq 1$ always.
 
-        \noindent where all parameters $\theta_i$ here are constrained in such a way that $0 \leq \eta_{\rm propulsive} \leq 1$ always.
-
+        \noindent Note the physical interpretation of several parameters here:
+        \begin{itemize}
+            \item $\theta_7$ provides an upper bound on the peak propulsive efficiency
+            \item $\theta_8$ represents the $c_J$ value corresponding to peak efficiency
+            \item $\theta_9$ represents the $c_J$ value corresponding to the ``pitch speed'' of the propeller, where the thrust (and hence efficiency) goes to zero.
+            \item $\theta_{10}$ is a smoothing parameter that controls the sharpness of the transition between the two regions.
+        \end{itemize}\ \\
+        \noindent This model form captures expected behavior of the propulsive efficiency curve, including the fact that the propulsive efficiency is zero at zero airspeed and zero at the pitch speed of the propeller. The $\theta_7$ parameter is constrained to be less than one to bound efficiency to physically-plausible values. The resulting model form matches well with expected propeller efficiency trends, such as the curves seen in \cite{unified_propellers}.
     \end{enumerate}
 
     \subsection{Solving the Optimization Problem}
@@ -515,7 +553,7 @@
 
     With the optimization problem solved, we can now use the resulting $\theta$ values to compute the corrected data and model. This is shown in Figure \ref{fig:power_curve_with_physics}. The corrected data and model are now in excellent agreement, and the corrected data has significantly less unexplained variance than the raw data. The remaining unexplained variance is attributable to a variety of factors, such as wind updrafts and downdrafts and non-unity load factors during banked flight. In theory, both these effects could be corrected out using a similar inference procedure that is shown in this work (which could be augmented by, for example, IMU data). This is left as future work, which, if successful, would reduce the data spread in Figure \ref{fig:power_curve_with_physics} further.
 
-    \begin{figure}[!htb]
+    \begin{figure}[h]
         \centering
         \ifdraft{}{\includegraphics[]{figures/power_curve_with_physics.pdf}}
         \caption{Inferred power curve with physics-informed corrections on data and model, and using noise estimator with a resampling bootstrap for uncertainty quantification. Power curve agrees closely with the data and shows physically-plausible behavior. Uncertainty quantification is significantly tighter than in Figure \ref{fig:power_curve_spline_but_no_physics}, as the function space has been restricted using embedded physics knowledge.}
@@ -526,7 +564,7 @@
 
     A notable observation is that the inferred aerodynamic polar of Figure \ref{fig:aerodynamic_polar_with_physics} and the propulsive efficiency curve of Figure \ref{fig:propeller_polar_with_physics} show relatively wide uncertainty bands, while the power curve of Figure \ref{fig:power_curve_with_physics} shows a relatively narrow uncertainty band. This is interesting, since in typical analysis the power curve is computed as a function of these two performance relations; hence, one would intuitively expect that the power curve would inherit the uncertainty of both relations. The reason this does not occur here is that the uncertainties in the aerodynamic polar and the propulsive efficiency curves are not independent. In other words, the power required can be inferred relatively precisely, but there is not quite enough data to rigorously determine whether power losses are more due to aerodynamic drag or propulsive inefficiency.
 
-    \begin{figure}[!htb]
+    \begin{figure}[h]
         \centering
         \ifdraft{}{\includegraphics[]{figures/aerodynamic_polar_with_physics.pdf}}
         \caption{Inferred aerodynamic polar with physics-informed corrections on data and model, and using noise estimator with a resampling bootstrap for uncertainty quantification.}
@@ -535,7 +573,7 @@
 
     Compared to the naive approach in Figure \ref{fig:power_curve_naive}, Figure \ref{fig:power_curve_with_physics} enables us to make very accurate, physically-grounded, and uncertainty-quantified assertions about the performance of the airplane, based on minimal data (here, only four minutes of flight time).
 
-    \begin{figure}[!htb]
+    \begin{figure}[h]
         \centering
         \ifdraft{}{\includegraphics[]{figures/propeller_polar_with_physics.pdf}}
         \caption{Inferred propulsive efficiency curve with physics-informed corrections on data and model, and using noise estimator with a resampling bootstrap for uncertainty quantification.}
@@ -547,6 +585,7 @@
 
     All code and data used in this paper is publicly available at \url{https://github.com/peterdsharpe/aircraft-polar-reconstruction-from-flight-test}.
 
+    \afterpage{\FloatBarrier}
 
     \section{Conclusion}
     \label{sec:conclusion}

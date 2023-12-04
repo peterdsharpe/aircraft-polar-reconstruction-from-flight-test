@@ -42,5 +42,7 @@ plt.ylim(bottom=-2)
 plt.legend(ncols=2)
 p.show_plot(
     savefig="flight_raw_data.pdf",
-    legend=False
+    legend=False,
+    rotate_axis_labels=False,
+    set_ticks=False
 )
