@@ -1,5 +1,7 @@
 # Aircraft Polar Reconstruction from Minimal Flight Test Data
 
+by Peter Sharpe
+
 This repository contains the code used to generate the results in the paper "Physics-Informed Regression and Uncertainty Quantification of Aircraft Performance from Minimal Flight Data", with full citation here:
 
 ```bibtex
