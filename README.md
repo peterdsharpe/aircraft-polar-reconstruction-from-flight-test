@@ -13,7 +13,7 @@ This repository contains the code used to generate the results in the paper "Phy
 }
 ```
 
-[A summary of the problem we're solving and key results is in this presentation](./presentation/Physics-Informed%20Regression%20of%20Aircraft%20Performance%20from%20Minimal%20Flight%20Data.pptx).
+[A summary of the problem we're solving and key results is in this presentation](./presentation/Physics-Informed%20Regression%20of%20Aircraft%20Performance%20from%20Minimal%20Flight%20Data%20Small.pptx).
 
 [The paper PDF is available here](./out/main.pdf).
 
