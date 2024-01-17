@@ -1,5 +1,6 @@
 from common import *
-
+from aerosandbox.tools.statistics import time_series_uncertainty_quantification as tsuq
+from aerosandbox.tools.code_benchmarking import Timer
 
 def synthesize_data_and_reconstruct_noise_variance(freq_signal, freq_sample, order=1):
     """
@@ -14,7 +15,7 @@ def synthesize_data_and_reconstruct_noise_variance(freq_signal, freq_sample, ord
         freq_sample: Data sample rate from the sensor [Hz]
         order: Order of the estimator to use [int]
 
-    Returns: The true noise standard deviation and the reconstructed (estimated) noise standard deviation.
+    Returns: The true noise stanard deviation and the reconstructed (estimated) noise standard deviation.
     """
     ##### Synthetic Data Generation #####
     t = np.arange(0, 1, 1 / freq_sample)
@@ -35,7 +36,7 @@ def synthesize_data_and_reconstruct_noise_variance(freq_signal, freq_sample, ord
     return true_noise_standard_deviation, estimated_noise_standard_deviation
 
 
-fig, ax = plt.subplots(figsize=(6.5, 4.5))
+fig, ax = plt.subplots(figsize=(8, 4))
 
 freq_sample = 100000
 freq_signals = freq_sample / np.logspace(0, 3, 1000)
@@ -74,7 +75,7 @@ for i, order in tqdm(enumerate(orders)):
     ax.loglog(
         ratio[index_noise_floor:],
         error[index_noise_floor:],
-        alpha=0.2, color=c, linewidth=1,
+        alpha=0.1, color=c, linewidth=1,
         zorder=3,
     )
 
@@ -99,14 +100,28 @@ plt.annotate(
         facecolor="k",
     ),
 )
-plt.annotate(
-    text="For readability, lines are faded once they hit the theoretical\nminimum-possible estimator error, roughly $\\epsilon \\approx N^{-0.5}$",
-    xy=(0.02, 0.02),
-    xycoords="axes fraction",
-    ha="left",
-    va="bottom",
-    fontsize=9
+p.hline(
+    y=freq_sample ** -0.5,
+    text="Minimum Possible Estimator Error",
+    text_kwargs=dict(
+        fontsize=10
+    ),
+    text_ha="center",
+    text_va="top",
+    color="k",
+    linestyle="--",
+    alpha=0.5,
+    zorder=2,
 )
+
+# plt.annotate(
+#     text="For readability, lines are faded once they hit the theoretical\nminimum-possible estimator error, roughly $\\epsilon \\approx N^{-0.5}$",
+#     xy=(0.02, 0.02),
+#     xycoords="axes fraction",
+#     ha="left",
+#     va="bottom",
+#     fontsize=9
+# )
 
 plt.legend(
     title="Estimator Order",
@@ -115,7 +130,7 @@ plt.legend(
 p.show_plot(
     # title="Performance of Higher-Order Data-Driven Noise Estimators",
     xlabel=r"Ratio of $\frac{\mathrm{Sample\ Frequency}}{\mathrm{Underlying\ Signal\ Frequency}}$",
-    ylabel=r"Relative Error of Estimator $\epsilon = \left| \frac{ \sigma_{\mathrm{estimated}} - \sigma_{\mathrm{true}} }{\sigma_{\mathrm{true}}}\right|$",
+    ylabel="Relative Error\nof Estimator\n\n" + r"$\epsilon = \left| \frac{ \sigma_{\mathrm{estimated}} - \sigma_{\mathrm{true}} }{\sigma_{\mathrm{true}}}\right|$",
     legend=False,
     # dpi=300,
     savefig="noise_variance_higher_order.pdf",
